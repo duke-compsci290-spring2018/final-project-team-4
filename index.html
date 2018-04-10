@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="author" content="Blake Becerra">
+  <meta name="author" content="Addison Howenstine">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CS290 Team 4 Final Plan</title>
+</head>
+<body>
+  <h1>Team 4: Blake Becerra and Addison Howenstine</h1>
+  <h2>Features</h2>
+  <h3>For Tent Captain</h3>
+  <ul>
+    <li>Captain can log in with their Google account and output a tenting or Walk Up Line schedule by specifying the days and times when a specific number of people are required to be in K-ville (specify when Black/Blue/White tenting are as well as grace)</li>
+    <li>Save tenting templates to output multiple spreadsheets for different weeks or Walk Up Line schedules</li>
+    <li>Add other members of the tent and keep track of their schedules</li>
+    <li>Secure login using Google to simplify spreadsheet export</li>
+  </ul>
+  <h3>For Tent Members</h3>
+  <ul>
+    <li>User can add their weekly schedule so tent members can see who is free when. Site can keep track of who is busy at specific times</li>
+    <li>Secure login using Google to simplify spreadsheet export</li>
+  </ul>
+  <h3>Schedule Preferences and Customization</h3>
+  <ul>
+    <li>Keep track of how many night hours and day hours each member spends in the tent</li>
+    <li>Recalculate hours and nights in Kville if there are long unforeseen grace periods</li>
+    <li>Some tents may weight time differently, for example counting night hours as a block of hours vs requiring members to spend a specific number of nights in the tent. We will talk to potential users about their schedules and add selectable preferences for outputting a spreadsheet. These settings will be stored for outputting new schedules</li>
+    <li>Use 12 hour time with AM or PM or 24 hour time</li>
+  </ul>
+  <h3>Notifications</h3>
+  <ul>
+    <li>Users can set up email and text reminders for shifts, black tenting events, and games.</li>
+    <li>Stretch Goal: Integrate Facebook Messenger or GroupMe to be able to notify tentmates of empty shifts, black tenting events, and other Kville events.</li>
+  </ul>
+  <h2>Data</h2>
+  <ul>
+    <li>Users can add unavailable time blocks with 15 minute time intervals (e.g. unavailable between 8:15 - 10:30).</li>
+    <li>Calculated amount of time every user has spent in Kville</li>
+    <li>How many hours every user will need to spend in Kville</li>
+    <li>Tents’ preferences to if they will have night shifts as a block or count them as regular hours</li>
+    <li>Users’ general weekly schedule to prefill times that they are unavailable</li>
+  </ul>
+  <h2>APIs</h2>
+  <h3>Google Identity Platform</h3>
+  <ul>
+    <li>Used for logins and for linking user data to a Google Docs account</li>
+  </ul>
+  <h3>Google Sheets API</h3>
+  <ul>
+    <li>Use preferences set by Tent Captain to output a schedule that will be saved to users’ Google Drive accounts and shared with all tent members</li>
+    <li>API allows for value entries, formulas, and conditional formatting—all of which will be used to create a user friendly spreadsheet that is easily displays relevant data for the users</li>
+  </ul>
+  <h2>Example Spreadsheets</h2>
+  <img src="./images/spreadsheet1.png" alt="Spreadsheet with tentmates contact information and accrued hours">
+  <img src="./images/spreadsheet1.png" alt="Sample day with tentmates shift information">
+  <h2>Timeline</h2>
+  <img src="./images/timeline.png" alt="timeline of our task for the final project">
+</body>
