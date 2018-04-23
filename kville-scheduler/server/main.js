@@ -14,13 +14,13 @@ app.use(express.static(__dirname + '../dist'));
 //   })
 // })
 
-app.get('/', (req, res) =>{
-  groupRef.push({
-    "name": "Test"
-  })
-  res.json({"message": "Welcome to our kville scheduler app"})
-  res.end()
-})
+// app.get('/', (req, res) =>{
+//   groupRef.push({
+//     "name": "Test"
+//   })
+//   res.json({"message": "Welcome to our kville scheduler app"})
+//   res.end()
+// })
 
 console.log(config)
 app.listen(config.PORT, () => {
