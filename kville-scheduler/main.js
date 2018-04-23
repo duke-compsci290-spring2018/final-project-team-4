@@ -13,17 +13,25 @@ app.use(bodyParser.json());
 console.log(__dirname + '/dist')
 app.use(express.static(__dirname + '/dist'));
 
-// app.post('/api/test', (req, res) =>{
-//   res.end();
-// })
 
+app.post('/api/create-group', (req, res) =>{
+  groupRef.push({
+    "name": req.body.name,
+    "users": req.body.users,
+    "schedule": req.body.schedule
+  });
+  res.end();
+});
+
+app.post('api/add-user', (req, res) => {
+  console.log('adding user')
+  res.end();
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
-console.log(config)
 app.listen(config.PORT, () => {
   console.log("listening on port " + config.PORT)
-  console.log(process.env.PORT)
-})
+});

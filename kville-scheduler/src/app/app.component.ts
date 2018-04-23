@@ -27,6 +27,7 @@ export class AppComponent {
   }
 
   signedIn() {
-    return gapi.auth2.getAuthInstance().isSignedIn.get();
+    // return gapi.auth2.getAuthInstance().isSignedIn.get();
+    return true
   }
 }

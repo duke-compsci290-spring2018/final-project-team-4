@@ -68,10 +68,11 @@ var AppComponent = /** @class */ (function () {
         return gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName();
     };
     AppComponent.prototype.signedIn = function () {
-        return gapi.auth2.getAuthInstance().isSignedIn.get();
+        // return gapi.auth2.getAuthInstance().isSignedIn.get();
+        return true;
     };
     AppComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-root',
             template: __webpack_require__("./src/app/app.component.html"),
             styles: [__webpack_require__("./src/app/app.component.css")]
@@ -99,8 +100,10 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6_angularfire2__ = __webpack_require__("./node_modules/angularfire2/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_angularfire2_database__ = __webpack_require__("./node_modules/angularfire2/database/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_angularfire2_auth__ = __webpack_require__("./node_modules/angularfire2/auth/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__environments_environment__ = __webpack_require__("./src/environments/environment.ts");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__groups_page_groups_page_component__ = __webpack_require__("./src/app/groups-page/groups-page.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_angular_google_signin__ = __webpack_require__("./node_modules/angular-google-signin/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9_angular_google_signin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9_angular_google_signin__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__environments_environment__ = __webpack_require__("./src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__groups_page_groups_page_component__ = __webpack_require__("./src/app/groups-page/groups-page.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -118,20 +121,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 
 
 
+
 var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["E" /* NgModule */])({
+        Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["NgModule"])({
             declarations: [
                 __WEBPACK_IMPORTED_MODULE_3__app_component__["a" /* AppComponent */],
                 __WEBPACK_IMPORTED_MODULE_4__navbar_navbar_component__["a" /* NavbarComponent */],
                 __WEBPACK_IMPORTED_MODULE_5__welcome_page_welcome_page_component__["a" /* WelcomePageComponent */],
-                __WEBPACK_IMPORTED_MODULE_10__groups_page_groups_page_component__["a" /* GroupsPageComponent */]
+                __WEBPACK_IMPORTED_MODULE_11__groups_page_groups_page_component__["a" /* GroupsPageComponent */],
+                __WEBPACK_IMPORTED_MODULE_9_angular_google_signin__["GoogleSignInComponent"]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
-                __WEBPACK_IMPORTED_MODULE_6_angularfire2__["a" /* AngularFireModule */].initializeApp(__WEBPACK_IMPORTED_MODULE_9__environments_environment__["a" /* environment */].firebase),
+                __WEBPACK_IMPORTED_MODULE_6_angularfire2__["a" /* AngularFireModule */].initializeApp(__WEBPACK_IMPORTED_MODULE_10__environments_environment__["a" /* environment */].firebase),
                 __WEBPACK_IMPORTED_MODULE_7_angularfire2_database__["b" /* AngularFireDatabaseModule */],
                 __WEBPACK_IMPORTED_MODULE_8_angularfire2_auth__["a" /* AngularFireAuthModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* HttpModule */]
@@ -183,7 +188,7 @@ var GroupsPageComponent = /** @class */ (function () {
     GroupsPageComponent.prototype.ngOnInit = function () {
     };
     GroupsPageComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-groups-page',
             template: __webpack_require__("./src/app/groups-page/groups-page.component.html"),
             styles: [__webpack_require__("./src/app/groups-page/groups-page.component.css")]
@@ -207,7 +212,7 @@ module.exports = ""
 /***/ "./src/app/navbar/navbar.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{ user }}</div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<div class=\"col-2 g-signin2\" (data-onsuccess)=\"loginName()\"></div>\n</div>\n"
+module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{ user }}</div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<!-- <div class=\"col-2 g-signin2\" (data-onsuccess)=\"loginName()\"></div> -->\n\t<google-signin\n  \t[clientId]=\"clientID\"\n  \t(googleSignInSuccess)=\"onSuccess($event)\">\n\t</google-signin>\n</div>\n\n\n<!-- [width]=\"width\"\n[theme]=\"theme\"\n[scope]=\"scope\"\n[longTitle]=\"longTitle\" -->\n"
 
 /***/ }),
 
@@ -229,32 +234,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
-var currentUser;
 var NavbarComponent = /** @class */ (function () {
     function NavbarComponent(db) {
         this.db = db;
-        this.user = {};
+        this.clientID = '123382215531-o3gequic8stoss1s0vj0bdb8pcqvhi7n.apps.googleusercontent.com';
     }
     NavbarComponent.prototype.ngOnInit = function () { };
-    NavbarComponent.prototype.onSignIn = function () {
-        console.log('yay');
+    // private clientID: string = 'client 123382215531-o3gequic8stoss1s0vj0bdb8pcqvhi7n.apps.googleusercontent.com'
+    NavbarComponent.prototype.onSuccess = function (event) {
+        var googleUser = event.googleUser;
+        var id = googleUser.getId();
+        var profile = googleUser.getBasicProfile();
+        console.log(googleUser.getAuthResponse());
+        console.log(id);
+        console.log(profile);
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
     };
     NavbarComponent.prototype.handleSignOutClick = function (event) {
-        console.log(this.user);
         gapi.auth2.getAuthInstance().signOut();
     };
     NavbarComponent.prototype.isLoggedIn = function () {
         return gapi.auth2.getAuthInstance().isSignedIn.get();
     };
-    NavbarComponent.prototype.loginName = function () {
-        console.log('running');
-        if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-            this.user = '';
-        }
-        this.user = gapi.auth2.getAuthInstance().currentUser.get(); //.getBasicProfile().getName();
-    };
     NavbarComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-navbar',
             template: __webpack_require__("./src/app/navbar/navbar.component.html"),
             styles: [__webpack_require__("./src/app/navbar/navbar.component.css")]
@@ -304,7 +308,7 @@ var WelcomePageComponent = /** @class */ (function () {
     WelcomePageComponent.prototype.ngOnInit = function () {
     };
     WelcomePageComponent = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-welcome-page',
             template: __webpack_require__("./src/app/welcome-page/welcome-page.component.html"),
             styles: [__webpack_require__("./src/app/welcome-page/welcome-page.component.css")]
@@ -356,7 +360,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 if (__WEBPACK_IMPORTED_MODULE_3__environments_environment__["a" /* environment */].production) {
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_5" /* enableProdMode */])();
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["enableProdMode"])();
 }
 Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* platformBrowserDynamic */])().bootstrapModule(__WEBPACK_IMPORTED_MODULE_2__app_app_module__["a" /* AppModule */])
     .catch(function (err) { return console.log(err); });

@@ -10,6 +10,7 @@ import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 import { AngularFireModule } from 'angularfire2';
 import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
+import { GoogleSignInComponent } from 'angular-google-signin';
 
 import { environment } from './../environments/environment';
 import { GroupsPageComponent } from './groups-page/groups-page.component';
@@ -20,7 +21,8 @@ import { GroupsPageComponent } from './groups-page/groups-page.component';
     AppComponent,
     NavbarComponent,
     WelcomePageComponent,
-    GroupsPageComponent
+    GroupsPageComponent,
+    GoogleSignInComponent
   ],
   imports: [
     BrowserModule,
