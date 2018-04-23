@@ -1,3 +1,7 @@
 <app-navbar></app-navbar>
-<app-welcome-page *ngIf="signedIn"></app-welcome-page>
-<h2><a (click)="test()">Test API</a></h2>
+<div class="container">
+	<h1>K-ville Scheduler</h1>
+	<app-welcome-page *ngIf="!signedIn()"></app-welcome-page>
+	<h2><a (click)="test()">Test API</a></h2>
+</div>
+

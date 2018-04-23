@@ -18,4 +18,15 @@ export class AppComponent {
       console.log(posts)
     })
   }
+
+  logginName() {
+    if (! gapi.auth2.getAuthInstance().isSignedIn.get()) {
+      return '';
+    }
+    return gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName();
+  }
+
+  signedIn() {
+    return gapi.auth2.getAuthInstance().isSignedIn.get();
+  }
 }
