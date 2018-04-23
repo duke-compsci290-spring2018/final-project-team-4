@@ -6,7 +6,7 @@ var database = require('./database.js')
 var groupRef = database.groups
 
 const app = Express()
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '../dist'));
 
 // app.get('/api/test', (req, res) =>{
 //   groupRef.push({
@@ -23,6 +23,6 @@ app.get('/', (req, res) =>{
 })
 
 console.log(config)
-app.listen(config.PORT, config.HOST, () => {
+app.listen(config.PORT, () => {
   console.log("listening on port " + config.PORT)
 })
