@@ -16,14 +16,15 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {  }
 
-  onSignIn() {
-  	console.log('poop');
+  user = {};
+
+  onSignIn(){
+    console.log('yay')
   }
 
   handleSignOutClick(event):void {
+    console.log(this.user)
     gapi.auth2.getAuthInstance().signOut();
-    console.log($cookieStore);
-
   }
 
   isLoggedIn(){
@@ -31,11 +32,11 @@ export class NavbarComponent implements OnInit {
   }
 
   loginName(){
-
+    console.log('running')
   	if (! gapi.auth2.getAuthInstance().isSignedIn.get()) {
-  		return '';
+  		this.user = '';
   	}
-  	return gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName();
+  	this.user = gapi.auth2.getAuthInstance().currentUser.get()//.getBasicProfile().getName();
   }
 
 }

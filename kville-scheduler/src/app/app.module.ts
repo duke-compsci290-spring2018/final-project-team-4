@@ -12,13 +12,15 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { environment } from './../environments/environment';
+import { GroupsPageComponent } from './groups-page/groups-page.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
-    WelcomePageComponent
+    WelcomePageComponent,
+    GroupsPageComponent
   ],
   imports: [
     BrowserModule,

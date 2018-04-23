@@ -100,12 +100,14 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_angularfire2_database__ = __webpack_require__("./node_modules/angularfire2/database/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8_angularfire2_auth__ = __webpack_require__("./node_modules/angularfire2/auth/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__environments_environment__ = __webpack_require__("./src/environments/environment.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__groups_page_groups_page_component__ = __webpack_require__("./src/app/groups-page/groups-page.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -124,7 +126,8 @@ var AppModule = /** @class */ (function () {
             declarations: [
                 __WEBPACK_IMPORTED_MODULE_3__app_component__["a" /* AppComponent */],
                 __WEBPACK_IMPORTED_MODULE_4__navbar_navbar_component__["a" /* NavbarComponent */],
-                __WEBPACK_IMPORTED_MODULE_5__welcome_page_welcome_page_component__["a" /* WelcomePageComponent */]
+                __WEBPACK_IMPORTED_MODULE_5__welcome_page_welcome_page_component__["a" /* WelcomePageComponent */],
+                __WEBPACK_IMPORTED_MODULE_10__groups_page_groups_page_component__["a" /* GroupsPageComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -144,6 +147,56 @@ var AppModule = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/groups-page/groups-page.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ""
+
+/***/ }),
+
+/***/ "./src/app/groups-page/groups-page.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div>\n  \n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/groups-page/groups-page.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GroupsPageComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var GroupsPageComponent = /** @class */ (function () {
+    function GroupsPageComponent() {
+    }
+    GroupsPageComponent.prototype.ngOnInit = function () {
+    };
+    GroupsPageComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
+            selector: 'app-groups-page',
+            template: __webpack_require__("./src/app/groups-page/groups-page.component.html"),
+            styles: [__webpack_require__("./src/app/groups-page/groups-page.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], GroupsPageComponent);
+    return GroupsPageComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/navbar/navbar.component.css":
 /***/ (function(module, exports) {
 
@@ -154,7 +207,7 @@ module.exports = ""
 /***/ "./src/app/navbar/navbar.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{loginName()}}</div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<div class=\"col-2 g-signin2\" data-onsuccess=\"onSignIn\"></div>\n</div>"
+module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{ user }}</div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<div class=\"col-2 g-signin2\" (data-onsuccess)=\"loginName()\"></div>\n</div>\n"
 
 /***/ }),
 
@@ -180,22 +233,25 @@ var currentUser;
 var NavbarComponent = /** @class */ (function () {
     function NavbarComponent(db) {
         this.db = db;
+        this.user = {};
     }
     NavbarComponent.prototype.ngOnInit = function () { };
     NavbarComponent.prototype.onSignIn = function () {
-        console.log('poop');
+        console.log('yay');
     };
     NavbarComponent.prototype.handleSignOutClick = function (event) {
+        console.log(this.user);
         gapi.auth2.getAuthInstance().signOut();
     };
     NavbarComponent.prototype.isLoggedIn = function () {
         return gapi.auth2.getAuthInstance().isSignedIn.get();
     };
     NavbarComponent.prototype.loginName = function () {
+        console.log('running');
         if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
-            return '';
+            this.user = '';
         }
-        return gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName();
+        this.user = gapi.auth2.getAuthInstance().currentUser.get(); //.getBasicProfile().getName();
     };
     NavbarComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({

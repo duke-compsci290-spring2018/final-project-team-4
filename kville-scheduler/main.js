@@ -3,6 +3,7 @@ const http = require('http')
 const bodyParser = require('body-parser')
 var database = require('./server/database.js')
 var config = require('./server/config.js')
+var path = require('path')
 
 
 var groupRef = database.groups
@@ -12,11 +13,9 @@ app.use(bodyParser.json());
 console.log(__dirname + '/dist')
 app.use(express.static(__dirname + '/dist'));
 
-app.post('/api/test', (req, res) =>{
-  groupRef.push({
-    "name" : req.body.name
-  })
-})
+// app.post('/api/test', (req, res) =>{
+//   res.end();
+// })
 
 
 app.get('*', (req, res) => {

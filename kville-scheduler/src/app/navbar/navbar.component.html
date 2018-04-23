@@ -1,5 +1,5 @@
 <div class="row">
-	<div class="col-8" id="lgn">{{loginName()}}</div>
+	<div class="col-8" id="lgn">{{ user }}</div>
 	<button id="signout-button" class="col-2" (click)="handleSignOutClick()">Sign out</button>
-	<div class="col-2 g-signin2" data-onsuccess="onSignIn"></div>
+	<div class="col-2 g-signin2" (data-onsuccess)="loginName()"></div>
 </div>
