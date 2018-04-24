@@ -12,8 +12,9 @@ export class AppComponent {
   constructor(private http:Http) { }
 
   test(){
-    var test = {name: "test1"}
-    this.http.post('/api/test', test)
+    var auth = gapi.auth2.getAuthInstance().currentUser.get();
+    var props = {auth: auth}
+    this.http.post('/api/clone-sheet', props)
     .subscribe((posts) =>{
       console.log(posts)
     })

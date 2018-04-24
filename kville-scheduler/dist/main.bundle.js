@@ -55,8 +55,9 @@ var AppComponent = /** @class */ (function () {
         this.title = 'app';
     }
     AppComponent.prototype.test = function () {
-        var test = { name: "test1" };
-        this.http.post('/api/test', test)
+        var auth = gapi.auth2.getAuthInstance().currentUser.get();
+        var props = { auth: auth };
+        this.http.post('/api/clone-sheet', props)
             .subscribe(function (posts) {
             console.log(posts);
         });
