@@ -51,11 +51,28 @@ app.listen(config.PORT, () => {
   console.log("listening on port " + config.PORT)
 });
 
+app.post('/api/save-user', (req, res) =>{
+  console.log(req.body.auth)
+  var auth = {
+    access_token: req.body.auth.access_token,
+    token_type: req.body.auth.token_type,
+    expiry_date: req.body.auth.expires_at
+  };
+  fs.writeFile(TOKEN_PATH, JSON.stringify(auth), (err)=>{
+    if(err) console.log(err);
+    console.log('Token stored to', TOKEN_PATH)
+  });
+  res.end("User has been saved");
+});
+
 app.post('/api/clone-sheet', (req, res) => {
   // TODO need auth somehow!!
-  console.log(req.body.auth);
-  auth = req.body.auth;
-  // TODO auth needs to be a real OAuth object
+  fs.readFile('client_secret.json', (err, content) => {
+    if (err) return console.log('Error loading client secret file:', err);
+    // Authorize a client with credentials, then call the Google Sheets API.
+    authorize(JSON.parse(content), listMajors);
+  });
+  // // TODO auth needs to be a real OAuth object
   // const sheets = google.sheets({version: 'v4', auth});
   // sheets.spreadsheets.values.get({
   //   spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
@@ -73,7 +90,7 @@ app.post('/api/clone-sheet', (req, res) => {
   //     console.log('No data found.');
   //   }
   // });
-  // res.end();
+  res.send("working");
 });
 
 
@@ -132,22 +149,22 @@ function getNewToken(oAuth2Client, callback) {
  * @param {OAuth2Client} auth The authenticated Google OAuth client.
  */
 function listMajors(auth) {
-  // console.log(auth);
-  // const sheets = google.sheets({version: 'v4', auth});
-  // sheets.spreadsheets.values.get({
-  //   spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-  //   range: 'Class Data!A2:E',
-  // }, (err, {data}) => {
-  //   if (err) return console.log('The API returned an error: ' + err);
-  //   const rows = data.values;
-  //   if (rows.length) {
-  //     console.log('Name, Major:');
-  //     // Print columns A and E, which correspond to indices 0 and 4.
-  //     rows.map((row) => {
-  //       console.log(`${row[0]}, ${row[4]}`);
-  //     })
-  //   } else {
-  //     console.log('No data found.');
-  //   }
-  // });
+  console.log(auth);
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.values.get({
+    spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
+    range: 'Class Data!A2:E',
+  }, (err, {data}) => {
+    if (err) return console.log('The API returned an error: ' + err);
+    const rows = data.values;
+    if (rows.length) {
+      console.log('Name, Major:');
+      // Print columns A and E, which correspond to indices 0 and 4.
+      rows.map((row) => {
+        console.log(`${row[0]}, ${row[4]}`);
+      })
+    } else {
+      console.log('No data found.');
+    }
+  });
 }

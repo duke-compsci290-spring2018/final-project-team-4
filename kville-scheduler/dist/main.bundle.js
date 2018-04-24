@@ -213,7 +213,7 @@ module.exports = ""
 /***/ "./src/app/navbar/navbar.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{ user }}</div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<!-- <div class=\"col-2 g-signin2\" (data-onsuccess)=\"loginName()\"></div> -->\n\t<google-signin\n  \t[clientId]=\"clientID\"\n  \t(googleSignInSuccess)=\"onSuccess($event)\">\n\t</google-signin>\n</div>\n\n\n<!-- [width]=\"width\"\n[theme]=\"theme\"\n[scope]=\"scope\"\n[longTitle]=\"longTitle\" -->\n"
+module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{ user }}</div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<!-- <div class=\"col-2 g-signin2\" (data-onsuccess)=\"loginName()\"></div> -->\n\t<google-signin\n  \t[clientId]=\"clientID\"\n  \t(googleSignInSuccess)=\"onSuccess($event)\">\n\t</google-signin>\n\t<button (click)=\"test()\">click me</button>\n</div>\n\n\n<!-- [width]=\"width\"\n[theme]=\"theme\"\n[scope]=\"scope\"\n[longTitle]=\"longTitle\" -->\n"
 
 /***/ }),
 
@@ -224,6 +224,7 @@ module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{ user
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return NavbarComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__ = __webpack_require__("./node_modules/angularfire2/database/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -235,22 +236,31 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var NavbarComponent = /** @class */ (function () {
-    function NavbarComponent(db) {
+    function NavbarComponent(db, http) {
         this.db = db;
+        this.http = http;
         this.clientID = '123382215531-o3gequic8stoss1s0vj0bdb8pcqvhi7n.apps.googleusercontent.com';
     }
     NavbarComponent.prototype.ngOnInit = function () { };
     // private clientID: string = 'client 123382215531-o3gequic8stoss1s0vj0bdb8pcqvhi7n.apps.googleusercontent.com'
     NavbarComponent.prototype.onSuccess = function (event) {
         var googleUser = event.googleUser;
+        var idk = gapi.auth2.getAuthInstance().currentUser.get();
         var id = googleUser.getId();
         var profile = googleUser.getBasicProfile();
-        console.log(googleUser.getAuthResponse());
-        console.log(id);
-        console.log(profile);
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
+        // console.log(googleUser.getAuthResponse())
+        // console.log(id)
+        // console.log(profile)
+        // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        // console.log('Name: ' + profile.getName());
+        console.log(idk);
+        this.user = idk;
+        this.http.post('/api/save-user', { auth: idk.getAuthResponse() })
+            .subscribe(function (post) {
+            console.log(post);
+        });
     };
     NavbarComponent.prototype.handleSignOutClick = function (event) {
         gapi.auth2.getAuthInstance().signOut();
@@ -258,13 +268,20 @@ var NavbarComponent = /** @class */ (function () {
     NavbarComponent.prototype.isLoggedIn = function () {
         return gapi.auth2.getAuthInstance().isSignedIn.get();
     };
+    NavbarComponent.prototype.test = function () {
+        var body = { auth: this.user.getAuthResponse() };
+        this.http.post('api/clone-sheet', body).
+            subscribe(function (post) {
+            console.log(post);
+        });
+    };
     NavbarComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
             selector: 'app-navbar',
             template: __webpack_require__("./src/app/navbar/navbar.component.html"),
             styles: [__webpack_require__("./src/app/navbar/navbar.component.css")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */], __WEBPACK_IMPORTED_MODULE_2__angular_http__["a" /* Http */]])
     ], NavbarComponent);
     return NavbarComponent;
 }());
