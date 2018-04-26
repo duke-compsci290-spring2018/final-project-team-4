@@ -21,12 +21,14 @@ const OAuth2Client = google.auth.OAuth2;
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = 'credentials.json';
 
+var activeSpreadsheetID;
+
 // Load client secrets from a local file.
-fs.readFile('client_secret.json', (err, content) => {
-  if (err) return console.log('Error loading client secret file:', err);
-  // Authorize a client with credentials, then call the Google Sheets API.
-  authorize(JSON.parse(content), listMajors);
-});
+// fs.readFile('client_secret.json', (err, content) => {
+//   if (err) return console.log('Error loading client secret file:', err);
+//   // Authorize a client with credentials, then call the Google Sheets API.
+//   authorize(JSON.parse(content), listMajors);
+// });
 
 
 app.post('/api/create-group', (req, res) =>{
@@ -70,26 +72,9 @@ app.post('/api/clone-sheet', (req, res) => {
   fs.readFile('client_secret.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
-    authorize(JSON.parse(content), listMajors);
+    authorize(JSON.parse(content), createSpreadsheet);
+    authorize(JSON.parse(content), copyTemplateToSpreadsheet);
   });
-  // // TODO auth needs to be a real OAuth object
-  // const sheets = google.sheets({version: 'v4', auth});
-  // sheets.spreadsheets.values.get({
-  //   spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-  //   range: 'Class Data!A2:E',
-  // }, (err, {data}) => {
-  //   if (err) return console.log('The API returned an error: ' + err);
-  //   const rows = data.values;
-  //   if (rows.length) {
-  //     console.log('Name, Major:');
-  //     // Print columns A and E, which correspond to indices 0 and 4.
-  //     rows.map((row) => {
-  //       console.log(`${row[0]}, ${row[4]}`);
-  //     })
-  //   } else {
-  //     console.log('No data found.');
-  //   }
-  // });
   res.send("working");
 });
 
@@ -166,5 +151,61 @@ function listMajors(auth) {
     } else {
       console.log('No data found.');
     }
+  });
+}
+
+function createSpreadsheet(auth) {
+  console.log('creating spreadsheet');
+  var request = {
+    resource: {
+      "properties": {
+        "title": "New Title Who Dis"
+      }
+    },
+
+    auth: auth,
+  };
+
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.create(request, function(err, response) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    console.log(response);
+    activeSpreadsheetID = response.data.spreadsheetId;
+
+  });
+}
+
+function copyTemplateToSpreadsheet(auth) {
+  console.log('copying template');
+  var request = {
+    // The ID of the spreadsheet containing the sheet to copy.
+    spreadsheetId: '1eHFGt_nyilZHwr1_0dnY4rdqb1G5qYunCYUl1d6UAc4',  // TODO: Update placeholder value.
+
+    // The ID of the sheet to copy.
+    sheetId: 579430821,  // TODO: Update placeholder value.
+
+    resource: {
+      // The ID of the spreadsheet to copy the sheet to.
+      destinationSpreadsheetId: activeSpreadsheetID,  // TODO: Update placeholder value.
+
+      // TODO: Add desired properties to the request body.
+    },
+
+    auth: auth,
+  };
+
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.sheets.copyTo(request, function(err, response) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log('trying to copy');
+    // TODO: Change code below to process the `response` object:
+    console.log(response);
   });
 }
