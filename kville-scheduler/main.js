@@ -10,7 +10,7 @@ var groupRef = database.groups
 
 const app = express()
 app.use(bodyParser.json());
-console.log(__dirname + '/dist')
+// console.log(__dirname + '/dist')
 app.use(express.static(__dirname + '/dist'));
 
 
@@ -41,7 +41,6 @@ app.post('/api/create-group', (req, res) =>{
 });
 
 app.post('api/add-user', (req, res) => {
-  console.log('adding user')
   res.end();
 });
 
@@ -54,7 +53,6 @@ app.listen(config.PORT, () => {
 });
 
 app.post('/api/save-user', (req, res) =>{
-  console.log(req.body.auth)
   var auth = {
     access_token: req.body.auth.access_token,
     token_type: req.body.auth.token_type,
@@ -69,11 +67,10 @@ app.post('/api/save-user', (req, res) =>{
 
 app.post('/api/clone-sheet', (req, res) => {
   // TODO need auth somehow!!
-  fs.readFile('client_secret.json', (err, content) => {
+  fs.readFile('client_secret.json', async (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
-    authorize(JSON.parse(content), createSpreadsheet);
-    authorize(JSON.parse(content), copyTemplateToSpreadsheet);
+    authorize(JSON.parse(content), createSpreadsheet)
   });
   res.send("working");
 });
@@ -85,7 +82,7 @@ app.post('/api/clone-sheet', (req, res) => {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+async function authorize(credentials, callback) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris[0]);
 
@@ -93,7 +90,7 @@ function authorize(credentials, callback) {
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token));
-    callback(oAuth2Client);
+    return callback(oAuth2Client);
   });
 }
 
@@ -134,7 +131,7 @@ function getNewToken(oAuth2Client, callback) {
  * @param {OAuth2Client} auth The authenticated Google OAuth client.
  */
 function listMajors(auth) {
-  console.log(auth);
+  // console.log(auth);
   const sheets = google.sheets({version: 'v4', auth});
   sheets.spreadsheets.values.get({
     spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
@@ -172,10 +169,12 @@ function createSpreadsheet(auth) {
       console.error(err);
       return;
     }
-
-    console.log(response);
-    activeSpreadsheetID = response.data.spreadsheetId;
-
+    // console.log(response);
+    this.activeSpreadsheetID = response.data.spreadsheetId;
+    fs.readFile('client_secret.json', async (err, content) => {
+      if (err) return console.log('Error loading client secret file:', err);
+      authorize(JSON.parse(content), copyTemplateToSpreadsheet);
+    });
   });
 }
 
@@ -190,7 +189,7 @@ function copyTemplateToSpreadsheet(auth) {
 
     resource: {
       // The ID of the spreadsheet to copy the sheet to.
-      destinationSpreadsheetId: activeSpreadsheetID,  // TODO: Update placeholder value.
+      destinationSpreadsheetId: this.activeSpreadsheetID,  // TODO: Update placeholder value.
 
       // TODO: Add desired properties to the request body.
     },
@@ -201,11 +200,11 @@ function copyTemplateToSpreadsheet(auth) {
   const sheets = google.sheets({version: 'v4', auth});
   sheets.spreadsheets.sheets.copyTo(request, function(err, response) {
     if (err) {
-      console.error(err);
+      // console.error(err);
       return;
     }
     console.log('trying to copy');
     // TODO: Change code below to process the `response` object:
-    console.log(response);
+    // console.log(response);
   });
 }
