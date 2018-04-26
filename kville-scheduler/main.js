@@ -21,15 +21,6 @@ const OAuth2Client = google.auth.OAuth2;
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = 'credentials.json';
 
-var activeSpreadsheetID;
-
-// Load client secrets from a local file.
-// fs.readFile('client_secret.json', (err, content) => {
-//   if (err) return console.log('Error loading client secret file:', err);
-//   // Authorize a client with credentials, then call the Google Sheets API.
-//   authorize(JSON.parse(content), listMajors);
-// });
-
 
 app.post('/api/create-group', (req, res) =>{
   groupRef.push({
@@ -125,38 +116,15 @@ function getNewToken(oAuth2Client, callback) {
   });
 }
 
-/**
- * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- * @param {OAuth2Client} auth The authenticated Google OAuth client.
- */
-function listMajors(auth) {
-  // console.log(auth);
-  const sheets = google.sheets({version: 'v4', auth});
-  sheets.spreadsheets.values.get({
-    spreadsheetId: '1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms',
-    range: 'Class Data!A2:E',
-  }, (err, {data}) => {
-    if (err) return console.log('The API returned an error: ' + err);
-    const rows = data.values;
-    if (rows.length) {
-      console.log('Name, Major:');
-      // Print columns A and E, which correspond to indices 0 and 4.
-      rows.map((row) => {
-        console.log(`${row[0]}, ${row[4]}`);
-      })
-    } else {
-      console.log('No data found.');
-    }
-  });
-}
-
 function createSpreadsheet(auth) {
-  console.log('creating spreadsheet');
+  console.log('Creating new schedule spreadsheet');
+
+  // CREATE NEW SCHEDULE SPREADSHEET
+
   var request = {
     resource: {
       "properties": {
-        "title": "New Title Who Dis"
+        "title": "K-ville Schedule"
       }
     },
 
@@ -169,42 +137,122 @@ function createSpreadsheet(auth) {
       console.error(err);
       return;
     }
-    // console.log(response);
-    this.activeSpreadsheetID = response.data.spreadsheetId;
+
+    var activeSpreadsheetID = response.data.spreadsheetId;
+    // TODO store this new spreadsheetId to firebase so we have access to it
+
     fs.readFile('client_secret.json', async (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
-      authorize(JSON.parse(content), copyTemplateToSpreadsheet);
+      authorize(JSON.parse(content), function(auth) {
+
+        // TODO COPY STATS TEMPLATE PAGE PAGE TO NEW DOC
+
+
+        // TODO COPY NIGHTS TEMPLATE PAGE TO NEW DOC
+
+
+        // COPY DAILY SCHEDULE TEMPLATE TO NEW DOC
+
+        var request = {
+          // The ID of the spreadsheet containing the sheet to copy.
+          spreadsheetId: '1eHFGt_nyilZHwr1_0dnY4rdqb1G5qYunCYUl1d6UAc4',
+
+          // The ID of the sheet to copy.
+          sheetId: 579430821,
+
+          resource: {
+            // The ID of the spreadsheet to copy the sheet to.
+            destinationSpreadsheetId: activeSpreadsheetID,
+          },
+
+          auth: auth,
+        };
+
+        const sheets = google.sheets({version: 'v4', auth});
+        sheets.spreadsheets.sheets.copyTo(request, function(err, response) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
+          var templateSheetId = response.data.sheetId;
+
+          fs.readFile('client_secret.json', async (err, content) => {
+            if (err) return console.log('Error loading client secret file:', err);
+            authorize(JSON.parse(content), function(auth) {
+
+              // DUPLICATE NEW DAILY TEMPLATE FOR EACH DAY OF TENTING
+
+              // TODO get names from firebase
+              // TODO use start date and end date to build days list
+              var names = ['Addison', 'Blake', 'Thomas', 'Emily', 'Charlotte', 'Grant'];
+              var days = ['1/15 Mo', '1/16 Tu', '1/17 We', '1/18 Th', '1/19 Fr', '1/20 Sa', '1/21 Su'];
+
+              var batchRequest = []; // to build list of synchronous update requests
+
+
+              var nameValues = []; // to build list of name values to be added to spreadsheet
+              for (var i = 0; i < names.length; i++) {
+                nameValues.push({
+                  "userEnteredValue": {"stringValue": names[i]}
+                });
+              }
+
+              batchRequest.push({
+                "updateCells": {
+                  "start": {
+                    "sheetId": templateSheetId,
+                    "rowIndex": 0,
+                    "columnIndex": 4, // index to begin putting names for daily schedule
+                  },
+                  "rows": [
+                    {
+                      "values": nameValues,
+                    }
+                  ],
+                  "fields": "userEnteredValue" 
+                }
+              });
+
+              // build request objects for each day
+              for (var i = 0; i < days.length; i++) {
+                batchRequest.push({
+                    "duplicateSheet": {
+                      "sourceSheetId": templateSheetId,
+                      "insertSheetIndex": i + 2,
+                      "newSheetId": i + 1, // TODO make the sheetId correspond to a date such as 20180115
+                      "newSheetName": days[i],
+                    }
+                  });
+              }
+
+              batchRequest.push({
+                "deleteSheet": {
+                  "sheetId": templateSheetId
+                }
+              })
+
+              var request = {
+                spreadsheetId: activeSpreadsheetID,
+
+                resource: {
+                  requests: batchRequest,
+                },
+
+                auth: auth,
+              };
+
+              const sheets = google.sheets({version: 'v4', auth});
+              sheets.spreadsheets.batchUpdate(request, function(err, response) {
+                if (err) {
+                  console.error(err);
+                  return;
+                }
+              });
+            });
+          });
+        });
+      });
     });
-  });
-}
-
-function copyTemplateToSpreadsheet(auth) {
-  console.log('copying template');
-  var request = {
-    // The ID of the spreadsheet containing the sheet to copy.
-    spreadsheetId: '1eHFGt_nyilZHwr1_0dnY4rdqb1G5qYunCYUl1d6UAc4',  // TODO: Update placeholder value.
-
-    // The ID of the sheet to copy.
-    sheetId: 579430821,  // TODO: Update placeholder value.
-
-    resource: {
-      // The ID of the spreadsheet to copy the sheet to.
-      destinationSpreadsheetId: this.activeSpreadsheetID,  // TODO: Update placeholder value.
-
-      // TODO: Add desired properties to the request body.
-    },
-
-    auth: auth,
-  };
-
-  const sheets = google.sheets({version: 'v4', auth});
-  sheets.spreadsheets.sheets.copyTo(request, function(err, response) {
-    if (err) {
-      // console.error(err);
-      return;
-    }
-    console.log('trying to copy');
-    // TODO: Change code below to process the `response` object:
-    // console.log(response);
   });
 }
