@@ -22,6 +22,13 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const TOKEN_PATH = 'credentials.json';
 
 
+// TEMPLATE ID REFS
+const TEMPLATE_SPREADSHEET_ID = '1eHFGt_nyilZHwr1_0dnY4rdqb1G5qYunCYUl1d6UAc4';
+const TEMPLATE_DATA_SHEET_ID = 0;
+const TEMPLATE_NIGHT_SHEET_ID = 167009206;
+const TEMPLATE_DAILY_SCHEDULE_SHEET_ID = 579430821;
+
+
 app.post('/api/create-group', (req, res) =>{
   groupRef.push({
     "name": req.body.name,
@@ -155,10 +162,10 @@ function createSpreadsheet(auth) {
 
         var request = {
           // The ID of the spreadsheet containing the sheet to copy.
-          spreadsheetId: '1eHFGt_nyilZHwr1_0dnY4rdqb1G5qYunCYUl1d6UAc4',
+          spreadsheetId: TEMPLATE_SPREADSHEET_ID,
 
           // The ID of the sheet to copy.
-          sheetId: 579430821,
+          sheetId: TEMPLATE_DAILY_SCHEDULE_SHEET_ID,
 
           resource: {
             // The ID of the spreadsheet to copy the sheet to.
@@ -184,20 +191,59 @@ function createSpreadsheet(auth) {
               // DUPLICATE NEW DAILY TEMPLATE FOR EACH DAY OF TENTING
 
               // TODO get names from firebase
-              // TODO use start date and end date to build days list
-              var names = ['Addison', 'Blake', 'Thomas', 'Emily', 'Charlotte', 'Grant'];
-              var days = ['1/15 Mo', '1/16 Tu', '1/17 We', '1/18 Th', '1/19 Fr', '1/20 Sa', '1/21 Su'];
+              var names = ['Addison', 'Blake', 'Thomas', 'Emily', 'Charlotte', 'Grant', 'Joel', 'Katie', 'Ken', 'Noah', 'Eric', 'Reed'];
+              var numbers = ['504-920-4520', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+
+              var startDate = new Date(2018, 00, 15, 12, 00, 00);
+              var endDate = new Date(2018, 01, 25, 12, 00, 00);
+              var startOfBlackDate = new Date(2018, 00, 15, 12, 00, 00);
+              var startOfBlueDate = new Date(2018, 00, 25, 12, 00, 00);
+              var startOfWhiteDate = new Date(2018, 01, 15, 12, 00, 00);
+
 
               var batchRequest = []; // to build list of synchronous update requests
+              var nameValuesCol = []; // to build column of names and phone numbers for data sheet
+              var nameValuesRow = []; // to build list of name values to be added to daily sheet
 
 
-              var nameValues = []; // to build list of name values to be added to spreadsheet
+              nameValuesCol.push({
+                "values": [
+                  {"userEnteredValue": {"stringValue": "Person"}},
+                  {"userEnteredValue": {"stringValue": "Phone #"}},
+                  {"userEnteredValue": {"stringValue": "Nights"}},
+                  {"userEnteredValue": {"stringValue": "Day Hrs - Black"}},
+                  {"userEnteredValue": {"stringValue": "Day Hrs - Blue"}},
+                  {"userEnteredValue": {"stringValue": "Day Hrs - White"}},
+                  {"userEnteredValue": {"stringValue": "Day Hrs - Total"}},
+                ]
+              });
+
               for (var i = 0; i < names.length; i++) {
-                nameValues.push({
-                  "userEnteredValue": {"stringValue": names[i]}
+                nameValuesRow.push(
+                  {"userEnteredValue": {"stringValue": names[i]}}
+                );
+                nameValuesCol.push({
+                  "values": [
+                    {"userEnteredValue": {"stringValue": names[i]}},
+                    {"userEnteredValue": {"stringValue": numbers[i]}}
+                  ]
                 });
               }
 
+              // set names and numbers on data sheet
+              batchRequest.push({
+                "updateCells": {
+                  "start": {
+                    "sheetId": 0,
+                    "rowIndex": 0,
+                    "columnIndex": 0,
+                  },
+                  "rows": nameValuesCol,
+                  "fields": "userEnteredValue" 
+                }
+              });
+
+              // set names on daily template sheet
               batchRequest.push({
                 "updateCells": {
                   "start": {
@@ -207,23 +253,101 @@ function createSpreadsheet(auth) {
                   },
                   "rows": [
                     {
-                      "values": nameValues,
+                      "values": nameValuesRow,
                     }
                   ],
                   "fields": "userEnteredValue" 
                 }
               });
 
-              // build request objects for each day
-              for (var i = 0; i < days.length; i++) {
+              var currCalendarRow = 16;
+
+              for (var d = startDate, i = 2; d < endDate; d.setDate(d.getDate() + 1), i++) {
+
+                var month = d.getMonth() + 1; // months are 0 indexed bc JS is stupid
+                var sheetName = "" + month + "/" + d.getDate();
+                switch ( d.getDay() ) {
+                  case 0: sheetName += " Su"; break;
+                  case 1: sheetName += " Mo"; break;
+                  case 2: sheetName += " Tu"; break;
+                  case 3: sheetName += " We"; break;
+                  case 4: sheetName += " Th"; break;
+                  case 5: sheetName += " Fr"; break;
+                  case 6: sheetName += " Sa"; break;
+                }
+                var newSheetId = "" + d.getFullYear() + d.getMonth() + d.getDate();
+
                 batchRequest.push({
                     "duplicateSheet": {
                       "sourceSheetId": templateSheetId,
-                      "insertSheetIndex": i + 2,
-                      "newSheetId": i + 1, // TODO make the sheetId correspond to a date such as 20180115
-                      "newSheetName": days[i],
+                      "insertSheetIndex": i,
+                      "newSheetId": newSheetId,
+                      "newSheetName": sheetName,
                     }
                   });
+
+
+
+                // Add day to Data Sheet Calendar
+                var borderColor;
+                if (d < startOfBlueDate) {
+                  borderColor = { // black border for black tenting
+                    "red": 0.0,
+                    "green": 0.0,
+                    "blue": 0.0,
+                  };
+                } else if (d < startOfWhiteDate) {
+                  borderColor = { // blue border for blue tenting
+                    "red": 0.0,
+                    "green": 0.0,
+                    "blue": 1.0,
+                  };
+                } else {
+                  borderColor = { // white border for white tenting
+                    "red": 1.0,
+                    "green": 1.0,
+                    "blue": 1.0,
+                  };
+                }
+                var calendarDayBorder = {
+                  "style": "SOLID_THICK",
+                  "color": borderColor
+                };
+
+                batchRequest.push({
+                  "updateCells": {
+                    "start": {
+                      "sheetId": 0,
+                      "rowIndex": currCalendarRow,
+                      "columnIndex": d.getDay(),
+                    },
+                    "rows": [
+                      {
+                        "values": [
+                          {
+                            "userEnteredValue": {"formulaValue": '=HYPERLINK("https://docs.google.com/spreadsheets/d/' + activeSpreadsheetID + '/edit#gid=' + newSheetId + '","' + sheetName + '")'},
+                            "userEnteredFormat": {
+                              "borders": {
+                                "top": calendarDayBorder,
+                                "bottom": calendarDayBorder,
+                                "left": calendarDayBorder,
+                                "right": calendarDayBorder,
+                              },
+                            },
+                            "hyperlink": "www.google.com",
+                          },
+                        ]
+                      }
+                    ],
+                    "fields": "*" 
+                  }
+                });
+
+
+
+                if (d.getDay() == 6) {
+                  currCalendarRow++; // new week on generated calendar
+                } 
               }
 
               batchRequest.push({
