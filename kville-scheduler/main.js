@@ -67,7 +67,7 @@ app.post('/api/save-user', (req, res) =>{
 
 app.post('/api/clone-sheet', (req, res) => {
   // TODO need auth somehow!!
-  fs.readFile('client_secret.json', async (err, content) => {
+  fs.readFile('client_secret.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
     authorize(JSON.parse(content), createSpreadsheet)
@@ -82,7 +82,7 @@ app.post('/api/clone-sheet', (req, res) => {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-async function authorize(credentials, callback) {
+function authorize(credentials, callback) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new OAuth2Client(client_id, client_secret, redirect_uris[0]);
 
@@ -171,10 +171,10 @@ function createSpreadsheet(auth) {
     }
     // console.log(response);
     this.activeSpreadsheetID = response.data.spreadsheetId;
-    fs.readFile('client_secret.json', async (err, content) => {
+    fs.readFile('client_secret.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
       authorize(JSON.parse(content), copyTemplateToSpreadsheet);
-      
+
     });
   });
 }

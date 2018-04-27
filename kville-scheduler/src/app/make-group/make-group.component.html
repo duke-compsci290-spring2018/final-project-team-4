@@ -1,0 +1,58 @@
+<form #userForm="ngForm" (ngSubmit)="submit()">
+  <fieldset>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="groupName" >Group Name:</label>
+        <input type="text" id="groupName" class="form-control" name="group" [(ngModel)]="data.groupName" placeholder="Enter group name here" required />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="type">Group Type:{{data.type}}</label><br/>
+        <div class="form-check form-check-inline">
+          <input id="tent" class="form-check-input" type="radio" name="type" value="Tent" [(ngModel)]="data.type" required />
+          <label class="form-check-label" for="tent">Tent</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input id="tent" class="form-check-input" type="radio" name="type" value="WUL" [(ngModel)]="data.type" required />
+          <label class="form-check-label" for="tent">Walk-Up Line</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input id="tent" class="form-check-input" type="radio" name="type" value="CWUL" [(ngModel)]="data.type" required />
+          <label class="form-check-label" for="tent">Carolina Walk-Up Line</label>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="startDate">Group Start Date:{{data.start}}</label>
+        <input type="date" id="startDate" class="form-control" name="start" [(ngModel)]="data.start" required />
+      </div>
+      <div class="form-group col-md-6">
+        <label for="endDate">Group End Date:{{data.end}}</label>
+        <input type="date" id="endDate" class="form-control" name="end" [(ngModel)]="data.end" required />
+      </div>
+    </div>
+  </fieldset>
+  <fieldset>
+    <div *ngFor="let u of data.users; let i=index">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="first">{{ i + 1 }} Member's First Name:</label>
+          <input type="text" id="first" class="form-control" name="{{i}}first" [(ngModel)]="u.first" placeholder="Insert member's first name" required />
+        </div>
+        <div class="form-group col-md-4">
+          <label for="last">{{ i + 1 }} Member's Last Name:</label>
+          <input type="text" id="last" class="form-control" name="{{i}}last" [(ngModel)]="u.last" placeholder="Insert member's last name" required />
+        </div>
+        <div class="form-group col-md-4">
+          <label for="phone">{{ i + 1 }} Member's Phone Number:</label>
+          <input type="text" class="form-control" id="phone" name="{{i}}phone" placeholder="123-456-7890" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12" [(ngModel)]="u.phone" required />
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <div>
+    <button type="button" class="btn btn-primary" (click)="addMember()">Add Member</button>
+    <button type="button" class="btn btn-primary" (click)="removeMember()">Remove Last Member</button>
+    <button type="submit" class="btn btn-primary" [disabled]="!userForm.valid">Submit Group Members</button>
+  </div>
+</form>
