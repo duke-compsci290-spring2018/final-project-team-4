@@ -200,7 +200,7 @@ function cloneDailyScheduleSheet(auth, params) {
 
     params.dailyTemplateSheetId = response.data.sheetId;
 
-    fs.readFile('client_secret.json', async (err, content) => {
+    fs.readFile('client_secret.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
       authorize(JSON.parse(content), cloneNightsScheduleSheet, params);
     });
@@ -235,7 +235,7 @@ function cloneNightsScheduleSheet(auth, params) {
 
     params.nightsSheetId = response.data.sheetId;
 
-    fs.readFile('client_secret.json', async (err, content) => {
+    fs.readFile('client_secret.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
       authorize(JSON.parse(content), batchUpdatesForNewSpreadsheet, params);
     });
@@ -286,7 +286,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
     "duplicateSheet": {
       "sourceSheetId": params.nightsSheetId,
       "insertSheetIndex": 1,
-      "newSheetId": 1, 
+      "newSheetId": 1,
       "newSheetName": "Nights",
     }
   });
@@ -330,7 +330,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
         "columnIndex": 0,
       },
       "rows": nameValuesCol,
-      "fields": "userEnteredValue" 
+      "fields": "userEnteredValue"
     }
   });
 
@@ -347,7 +347,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
           "values": nameValuesRow,
         }
       ],
-      "fields": "userEnteredValue" 
+      "fields": "userEnteredValue"
     }
   });
 
@@ -357,14 +357,14 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
       "start": {
         "sheetId": NIGHTS_SHEET_ID,
         "rowIndex": 0,
-        "columnIndex": 5, 
+        "columnIndex": 5,
       },
       "rows": [
         {
           "values": nameValuesRow,
         }
       ],
-      "fields": "userEnteredValue" 
+      "fields": "userEnteredValue"
     }
   });
 
@@ -373,7 +373,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
     var d = startDate, i = 2, currCalendarRow = 16, currNightRow = 2, rowIndexLastDayOfPreviousTentingPeriod = 1;
     d <= endDate;
     d.setDate(d.getDate() + 1), i++, currNightRow++
-    ) 
+    )
   {
 
     var month = d.getMonth() + 1; // months are 0 indexed bc JS is stupid
@@ -455,13 +455,13 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
             ]
           }
         ],
-        "fields": "*" 
+        "fields": "*"
       }
     });
 
     if (d.getDay() == 6) {
       currCalendarRow++; // new week on generated calendar
-    } 
+    }
 
 
     // SET UP NIGHTS SHEET
@@ -502,14 +502,14 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
             ]
           }
         ],
-        "fields": "userEnteredValue" 
+        "fields": "userEnteredValue"
       }
     });
 
 
     var msInDay = 86400000;
     if ((startOfBlueDate - d) == msInDay || (startOfWhiteDate - d) == msInDay || (endDate - d) == 0) { // if last night of black, blue, or white tenting
-      
+
       var colorPeriodString = "Black";
       if ((startOfWhiteDate - d) == msInDay) {
         colorPeriodString = "Blue";
@@ -543,7 +543,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
           "fields": "userEnteredValue"
         }
       });
-      
+
       batchRequest.push({
         "repeatCell": {
           "range": {
@@ -559,7 +559,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
           "fields": "userEnteredValue",
         }
       });
-      
+
       currNightRow++;
       rowIndexLastDayOfPreviousTentingPeriod = currNightRow;
     }
