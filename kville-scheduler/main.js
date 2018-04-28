@@ -39,6 +39,12 @@ app.post('/api/create-group', (req, res) =>{
   res.end();
 });
 
+// app.get('/api/get-members/:group', (req, res) =>{
+//   // console.log(groupRef.child(req.body.group))
+//   console.log('working')
+//   res.end();
+// });
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
 });

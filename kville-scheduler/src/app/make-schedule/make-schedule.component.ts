@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Http } from '@angular/http';
+import { UserService } from '../user.service'
 
 @Component({
   selector: 'app-make-schedule',
@@ -7,33 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MakeScheduleComponent implements OnInit {
 
-  constructor() { }
+  members = [];
+
+  constructor(private http: Http, private userService: UserService) {
+    // this.http.get('/api/get-members/-LBCihT7H5tCuCSSwSCs')
+    // .subscribe((post)=>{
+    //   console.log('yay')
+    // });
+  }
 
   ngOnInit() {
   }
 
-  members = [
-    {
-      first: "Blake",
-      last: "Becerra",
-      phone: "918-373-5276"
-    },
-    {
-      first: "Addison",
-      last: "Howenstine",
-      phone: "123-456-7890"
-    },
-    {
-      first: "Kabe",
-      last: "Webster",
-      phone: "123-654-7890"
-    },
-    {
-      first: "Rayleigh",
-      last: "Palmer",
-      phone: "098-765-4321"
-    }
-  ]
+
 
 
 }

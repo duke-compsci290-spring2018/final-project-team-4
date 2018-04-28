@@ -338,6 +338,8 @@ module.exports = "<table class=\"col-md-8 offset-md-2\">\n  <tr>\n    <th>First 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MakeScheduleComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_service__ = __webpack_require__("./src/app/user.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -348,30 +350,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var MakeScheduleComponent = /** @class */ (function () {
-    function MakeScheduleComponent() {
-        this.members = [
-            {
-                first: "Blake",
-                last: "Becerra",
-                phone: "918-373-5276"
-            },
-            {
-                first: "Addison",
-                last: "Howenstine",
-                phone: "123-456-7890"
-            },
-            {
-                first: "Kabe",
-                last: "Webster",
-                phone: "123-654-7890"
-            },
-            {
-                first: "Rayleigh",
-                last: "Palmer",
-                phone: "098-765-4321"
-            }
-        ];
+    function MakeScheduleComponent(http, userService) {
+        this.http = http;
+        this.userService = userService;
+        this.members = [];
+        // this.http.get('/api/get-members/-LBCihT7H5tCuCSSwSCs')
+        // .subscribe((post)=>{
+        //   console.log('yay')
+        // });
     }
     MakeScheduleComponent.prototype.ngOnInit = function () {
     };
@@ -381,7 +370,7 @@ var MakeScheduleComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/make-schedule/make-schedule.component.html"),
             styles: [__webpack_require__("./src/app/make-schedule/make-schedule.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */], __WEBPACK_IMPORTED_MODULE_2__user_service__["a" /* UserService */]])
     ], MakeScheduleComponent);
     return MakeScheduleComponent;
 }());
