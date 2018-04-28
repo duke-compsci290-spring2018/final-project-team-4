@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { AngularFireDatabase } from 'angularfire2/database';
 import { GoogleSignInSuccess } from 'angular-google-signin';
-import { Http } from '@angular/http'
+import { Http } from '@angular/http';
+import { UserService } from '../user.service';
 
 
 @Component({
@@ -13,7 +14,7 @@ import { Http } from '@angular/http'
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private db: AngularFireDatabase, private http: Http) { }
+  constructor(private db: AngularFireDatabase, private http: Http, private userService: UserService) { }
 
   ngOnInit() {  }
 
@@ -22,20 +23,14 @@ export class NavbarComponent implements OnInit {
   // private clientID: string = 'client 123382215531-o3gequic8stoss1s0vj0bdb8pcqvhi7n.apps.googleusercontent.com'
 
   onSuccess(event: GoogleSignInSuccess) {
-    let googleUser: gapi.auth2.GoogleUser = event.googleUser;
-    let idk = gapi.auth2.getAuthInstance().currentUser.get()
-    let id: string = googleUser.getId();
-    let profile: gapi.auth2.BasicProfile = googleUser.getBasicProfile();
-    // console.log(googleUser.getAuthResponse())
-    // console.log(id)
-    // console.log(profile)
-    // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    // console.log('Name: ' + profile.getName());
-    console.log(idk)
-    this.user = idk;
-    this.http.post('/api/save-user', {auth: idk.getAuthResponse()})
+    let currentUser = gapi.auth2.getAuthInstance().currentUser.get()
+    let profile: gapi.auth2.BasicProfile = currentUser.getBasicProfile();
+    console.log(currentUser.getBasicProfile())
+    this.user = currentUser;
+    this.userService.setKey(this.user.getBasicProfile().Eea);
+    this.http.post('/api/save-user', {auth: this.user.getAuthResponse(), profile: this.user.getBasicProfile()})
     .subscribe((post) =>{
-      console.log(post)
+      if(!post.ok) console.log(post);
     });
   }
 

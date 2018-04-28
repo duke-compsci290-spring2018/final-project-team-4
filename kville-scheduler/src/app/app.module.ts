@@ -17,6 +17,7 @@ import { environment } from './../environments/environment';
 import { GroupsPageComponent } from './groups-page/groups-page.component';
 import { MakeScheduleComponent } from './make-schedule/make-schedule.component';
 import { MakeGroupComponent } from './make-group/make-group.component';
+import { UserService } from './user.service';
 
 
 const routes: Routes = [
@@ -42,7 +43,7 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forRoot(routes)
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

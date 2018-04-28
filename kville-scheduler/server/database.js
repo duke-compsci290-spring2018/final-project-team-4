@@ -12,9 +12,11 @@ var db = firebase.initializeApp(config).database()
 
 //insert references here
 var groupRef = db.ref('groups')
+var userRef = db.ref('users')
 
 const database = {
   "database": db,
-  "groups": groupRef
+  "groups": groupRef,
+  "users": userRef
 }
 module.exports = database
