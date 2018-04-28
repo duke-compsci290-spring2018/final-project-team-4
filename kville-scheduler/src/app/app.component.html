@@ -3,5 +3,7 @@
 	<h1>K-ville Scheduler</h1>
 	<app-welcome-page *ngIf="!signedIn()"></app-welcome-page>
 	<h2><a (click)="test()">Test API</a></h2>
+	<a routerLink="make-group" routerLinkActive="active">Make a Group</a>
+	<!-- <app-make-group></app-make-group> -->
+	<router-outlet></router-outlet>
 </div>
-
