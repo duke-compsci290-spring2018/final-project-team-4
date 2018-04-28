@@ -7,6 +7,7 @@ var path = require('path')
 
 
 var groupRef = database.groups
+var userRef = database.users;
 
 const app = express()
 app.use(bodyParser.json());
@@ -34,15 +35,9 @@ const NIGHTS_SHEET_ID = 1;
 
 
 app.post('/api/create-group', (req, res) =>{
-  groupRef.push({
-    "name": req.body.name,
-    "users": req.body.users,
-    "schedule": req.body.schedule
+  groupRef.push(req.body.data).then((snap) =>{
+    userRef.child(req.body.key).child('groups').push(snap.key)
   });
-  res.end();
-});
-
-app.post('api/add-user', (req, res) => {
   res.end();
 });
 
@@ -55,6 +50,18 @@ app.listen(config.PORT, () => {
 });
 
 app.post('/api/save-user', (req, res) =>{
+  // console.log(userRef.child(req.body.profile.Eea).exists())
+  userRef.once('value', (snapshot)=>{
+    if(!snapshot.hasChild(req.body.profile.Eea)){
+      console.log('user doesn\'t exist');
+      userRef.child(req.body.profile.Eea).set({
+        "name": req.body.profile.ig,
+        "email": req.body.profile.U3,
+        "groups": []
+      });
+    }
+  });
+
   var auth = {
     access_token: req.body.auth.access_token,
     token_type: req.body.auth.token_type,

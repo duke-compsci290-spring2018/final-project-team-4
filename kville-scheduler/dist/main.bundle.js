@@ -27,7 +27,7 @@ module.exports = ".container {\n\ttext-align: center;\n}"
 /***/ "./src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<app-navbar></app-navbar>\n<div class=\"container\">\n\t<h1>K-ville Scheduler</h1>\n\t<app-welcome-page *ngIf=\"!signedIn()\"></app-welcome-page>\n\t<h2><a (click)=\"test()\">Test API</a></h2>\n\t<a routerLink=\"make-group\" routerLinkActive=\"active\">Make a Group</a>\n\t<!-- <app-make-group></app-make-group> -->\n\t<router-outlet></router-outlet>\n</div>\n"
+module.exports = "<app-navbar></app-navbar>\n<div class=\"container\">\n\t<h1>K-ville Scheduler</h1>\n\t<app-welcome-page *ngIf=\"!signedIn()\"></app-welcome-page>\n\t<h2><a (click)=\"test()\">Test API</a></h2>\n\t<a routerLink=\"make-group\" routerLinkActive=\"active\">Make a Group</a>\n\t<!-- <app-make-group></app-make-group> -->\n\t<app-make-schedule></app-make-schedule>\n\t<router-outlet></router-outlet>\n</div>\n"
 
 /***/ }),
 
@@ -109,12 +109,14 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__groups_page_groups_page_component__ = __webpack_require__("./src/app/groups-page/groups-page.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__make_schedule_make_schedule_component__ = __webpack_require__("./src/app/make-schedule/make-schedule.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__make_group_make_group_component__ = __webpack_require__("./src/app/make-group/make-group.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__user_service__ = __webpack_require__("./src/app/user.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -157,7 +159,7 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormsModule */],
                 __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* RouterModule */].forRoot(routes)
             ],
-            providers: [],
+            providers: [__WEBPACK_IMPORTED_MODULE_16__user_service__["a" /* UserService */]],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
         })
     ], AppModule);
@@ -228,7 +230,7 @@ module.exports = ""
 /***/ "./src/app/make-group/make-group.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<form #userForm=\"ngForm\" (ngSubmit)=\"submit()\">\n  <fieldset>\n    <div class=\"form-row\">\n      <div class=\"form-group col-md-6\">\n        <label for=\"groupName\" >Group Name:</label>\n        <input type=\"text\" id=\"groupName\" class=\"form-control\" name=\"group\" [(ngModel)]=\"data.groupName\" placeholder=\"Enter group name here\" required />\n      </div>\n      <div class=\"form-group col-md-6\">\n        <label for=\"type\">Group Type:{{data.type}}</label><br/>\n        <div class=\"form-check form-check-inline\">\n          <input id=\"tent\" class=\"form-check-input\" type=\"radio\" name=\"type\" value=\"Tent\" [(ngModel)]=\"data.type\" required />\n          <label class=\"form-check-label\" for=\"tent\">Tent</label>\n        </div>\n        <div class=\"form-check form-check-inline\">\n          <input id=\"tent\" class=\"form-check-input\" type=\"radio\" name=\"type\" value=\"WUL\" [(ngModel)]=\"data.type\" required />\n          <label class=\"form-check-label\" for=\"tent\">Walk-Up Line</label>\n        </div>\n        <div class=\"form-check form-check-inline\">\n          <input id=\"tent\" class=\"form-check-input\" type=\"radio\" name=\"type\" value=\"CWUL\" [(ngModel)]=\"data.type\" required />\n          <label class=\"form-check-label\" for=\"tent\">Carolina Walk-Up Line</label>\n        </div>\n      </div>\n    </div>\n    <div class=\"form-row\">\n      <div class=\"form-group col-md-6\">\n        <label for=\"startDate\">Group Start Date:{{data.start}}</label>\n        <input type=\"date\" id=\"startDate\" class=\"form-control\" name=\"start\" [(ngModel)]=\"data.start\" required />\n      </div>\n      <div class=\"form-group col-md-6\">\n        <label for=\"endDate\">Group End Date:{{data.end}}</label>\n        <input type=\"date\" id=\"endDate\" class=\"form-control\" name=\"end\" [(ngModel)]=\"data.end\" required />\n      </div>\n    </div>\n  </fieldset>\n  <fieldset>\n    <div *ngFor=\"let u of data.users; let i=index\">\n      <div class=\"form-row\">\n        <div class=\"form-group col-md-4\">\n          <label for=\"first\">{{ i + 1 }} Member's First Name:</label>\n          <input type=\"text\" id=\"first\" class=\"form-control\" name=\"{{i}}first\" [(ngModel)]=\"u.first\" placeholder=\"Insert member's first name\" required />\n        </div>\n        <div class=\"form-group col-md-4\">\n          <label for=\"last\">{{ i + 1 }} Member's Last Name:</label>\n          <input type=\"text\" id=\"last\" class=\"form-control\" name=\"{{i}}last\" [(ngModel)]=\"u.last\" placeholder=\"Insert member's last name\" required />\n        </div>\n        <div class=\"form-group col-md-4\">\n          <label for=\"phone\">{{ i + 1 }} Member's Phone Number:</label>\n          <input type=\"text\" class=\"form-control\" id=\"phone\" name=\"{{i}}phone\" placeholder=\"123-456-7890\" pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\" maxlength=\"12\" [(ngModel)]=\"u.phone\" required />\n        </div>\n      </div>\n    </div>\n  </fieldset>\n  <div>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"addMember()\">Add Member</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"removeMember()\">Remove Last Member</button>\n    <button type=\"submit\" class=\"btn btn-primary\" [disabled]=\"!userForm.valid\">Submit Group Members</button>\n  </div>\n</form>\n"
+module.exports = "<form #userForm=\"ngForm\" (ngSubmit)=\"submit()\">\n  <fieldset>\n    <div class=\"form-row\">\n      <div class=\"form-group col-md-6\">\n        <label for=\"groupName\" >Group Name:</label>\n        <input type=\"text\" id=\"groupName\" class=\"form-control\" name=\"group\" [(ngModel)]=\"data.groupName\" placeholder=\"Enter group name here\" required />\n      </div>\n      <div class=\"form-group col-md-6\">\n        <label for=\"type\">Group Type:{{data.type}}</label><br/>\n        <div class=\"form-check form-check-inline\">\n          <input id=\"tent\" class=\"form-check-input\" type=\"radio\" name=\"type\" value=\"Tent\" [(ngModel)]=\"data.type\" required />\n          <label class=\"form-check-label\" for=\"tent\">Tent</label>\n        </div>\n        <div class=\"form-check form-check-inline\">\n          <input id=\"tent\" class=\"form-check-input\" type=\"radio\" name=\"type\" value=\"WUL\" [(ngModel)]=\"data.type\" required />\n          <label class=\"form-check-label\" for=\"tent\">Walk-Up Line</label>\n        </div>\n        <div class=\"form-check form-check-inline\">\n          <input id=\"tent\" class=\"form-check-input\" type=\"radio\" name=\"type\" value=\"CWUL\" [(ngModel)]=\"data.type\" required />\n          <label class=\"form-check-label\" for=\"tent\">Carolina Walk-Up Line</label>\n        </div>\n      </div>\n    </div>\n    <div class=\"form-row\">\n      <div class=\"form-group col-md-6\">\n        <label for=\"startDate\">Group Start Date:{{data.start}}</label>\n        <input type=\"date\" id=\"startDate\" class=\"form-control\" name=\"start\" [(ngModel)]=\"data.start\" required />\n      </div>\n      <div class=\"form-group col-md-6\">\n        <label for=\"endDate\">Group End Date:{{data.end}}</label>\n        <input type=\"date\" id=\"endDate\" class=\"form-control\" name=\"end\" [(ngModel)]=\"data.end\" required />\n      </div>\n    </div>\n  </fieldset>\n  <fieldset>\n    <div *ngFor=\"let u of data.members; let i=index\">\n      <div class=\"form-row\">\n        <div class=\"form-group col-md-4\">\n          <label for=\"first\">{{ i + 1 }} Member's First Name:</label>\n          <input type=\"text\" id=\"first\" class=\"form-control\" name=\"{{i}}first\" [(ngModel)]=\"u.first\" placeholder=\"Insert member's first name\" required />\n        </div>\n        <div class=\"form-group col-md-4\">\n          <label for=\"last\">{{ i + 1 }} Member's Last Name:</label>\n          <input type=\"text\" id=\"last\" class=\"form-control\" name=\"{{i}}last\" [(ngModel)]=\"u.last\" placeholder=\"Insert member's last name\" required />\n        </div>\n        <div class=\"form-group col-md-4\">\n          <label for=\"phone\">{{ i + 1 }} Member's Phone Number:</label>\n          <input type=\"text\" class=\"form-control\" id=\"phone\" name=\"{{i}}phone\" placeholder=\"123-456-7890\" pattern=\"[0-9]{3}-[0-9]{3}-[0-9]{4}\" maxlength=\"12\" [(ngModel)]=\"u.phone\" required />\n        </div>\n      </div>\n    </div>\n  </fieldset>\n  <div>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"addMember()\">Add Member</button>\n    <button type=\"button\" class=\"btn btn-primary\" (click)=\"removeMember()\">Remove Last Member</button>\n    <button type=\"submit\" class=\"btn btn-primary\" [disabled]=\"!userForm.valid\">Submit Group Members</button>\n  </div>\n</form>\n"
 
 /***/ }),
 
@@ -238,6 +240,8 @@ module.exports = "<form #userForm=\"ngForm\" (ngSubmit)=\"submit()\">\n  <fields
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MakeGroupComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__user_service__ = __webpack_require__("./src/app/user.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -248,14 +252,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var MakeGroupComponent = /** @class */ (function () {
-    function MakeGroupComponent() {
+    function MakeGroupComponent(http, userService) {
+        this.http = http;
+        this.userService = userService;
         this.data = {
             groupName: "",
             start: "",
             end: "",
             type: "",
-            users: [{
+            members: [{
                     first: '',
                     last: '',
                     phone: ''
@@ -265,15 +273,16 @@ var MakeGroupComponent = /** @class */ (function () {
     MakeGroupComponent.prototype.ngOnInit = function () {
     };
     MakeGroupComponent.prototype.addMember = function () {
-        this.data.users.push({
+        console.log('pushing');
+        this.data.members.push({
             first: '',
             last: '',
             phone: ''
         });
     };
     MakeGroupComponent.prototype.removeMember = function () {
-        this.data.users.pop();
-        if (this.data.users.length === 0) {
+        this.data.members.pop();
+        if (this.data.members.length === 0) {
             this.addMember();
         }
     };
@@ -283,7 +292,16 @@ var MakeGroupComponent = /** @class */ (function () {
             alert("Start date must be before the end date. Please validate your input");
             return;
         }
-        console.log(this.data);
+        var info = {
+            data: this.data,
+            key: this.userService.getKey()
+        };
+        console.log(info);
+        this.http.post('/api/create-group', info)
+            .subscribe(function (post) {
+            if (!post.ok)
+                console.log(post);
+        });
     };
     MakeGroupComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
@@ -291,7 +309,7 @@ var MakeGroupComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/make-group/make-group.component.html"),
             styles: [__webpack_require__("./src/app/make-group/make-group.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */], __WEBPACK_IMPORTED_MODULE_2__user_service__["a" /* UserService */]])
     ], MakeGroupComponent);
     return MakeGroupComponent;
 }());
@@ -310,7 +328,7 @@ module.exports = ""
 /***/ "./src/app/make-schedule/make-schedule.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  it works!\n</p>\n"
+module.exports = "<table class=\"col-md-8 offset-md-2\">\n  <tr>\n    <th>First Name</th>\n    <th>Last Name</th>\n    <th>Phone</th>\n    <th></th>\n  </tr>\n  <tr *ngFor=\"let m of members\">\n    <td>{{m.first}}</td>\n    <td>{{m.last}}</td>\n    <td>{{m.phone}}</td>\n    <td><a>Add Schedule</a></td>\n  </tr>\n</table>\n"
 
 /***/ }),
 
@@ -332,6 +350,28 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var MakeScheduleComponent = /** @class */ (function () {
     function MakeScheduleComponent() {
+        this.members = [
+            {
+                first: "Blake",
+                last: "Becerra",
+                phone: "918-373-5276"
+            },
+            {
+                first: "Addison",
+                last: "Howenstine",
+                phone: "123-456-7890"
+            },
+            {
+                first: "Kabe",
+                last: "Webster",
+                phone: "123-654-7890"
+            },
+            {
+                first: "Rayleigh",
+                last: "Palmer",
+                phone: "098-765-4321"
+            }
+        ];
     }
     MakeScheduleComponent.prototype.ngOnInit = function () {
     };
@@ -372,6 +412,7 @@ module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\">{{ user
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_angularfire2_database__ = __webpack_require__("./node_modules/angularfire2/database/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__user_service__ = __webpack_require__("./src/app/user.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -384,29 +425,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var NavbarComponent = /** @class */ (function () {
-    function NavbarComponent(db, http) {
+    function NavbarComponent(db, http, userService) {
         this.db = db;
         this.http = http;
+        this.userService = userService;
         this.clientID = '123382215531-o3gequic8stoss1s0vj0bdb8pcqvhi7n.apps.googleusercontent.com';
     }
     NavbarComponent.prototype.ngOnInit = function () { };
     // private clientID: string = 'client 123382215531-o3gequic8stoss1s0vj0bdb8pcqvhi7n.apps.googleusercontent.com'
     NavbarComponent.prototype.onSuccess = function (event) {
-        var googleUser = event.googleUser;
-        var idk = gapi.auth2.getAuthInstance().currentUser.get();
-        var id = googleUser.getId();
-        var profile = googleUser.getBasicProfile();
-        // console.log(googleUser.getAuthResponse())
-        // console.log(id)
-        // console.log(profile)
-        // console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        // console.log('Name: ' + profile.getName());
-        console.log(idk);
-        this.user = idk;
-        this.http.post('/api/save-user', { auth: idk.getAuthResponse() })
+        var currentUser = gapi.auth2.getAuthInstance().currentUser.get();
+        var profile = currentUser.getBasicProfile();
+        console.log(currentUser.getBasicProfile());
+        this.user = currentUser;
+        this.userService.setKey(this.user.getBasicProfile().Eea);
+        this.http.post('/api/save-user', { auth: this.user.getAuthResponse(), profile: this.user.getBasicProfile() })
             .subscribe(function (post) {
-            console.log(post);
+            if (!post.ok)
+                console.log(post);
         });
     };
     NavbarComponent.prototype.handleSignOutClick = function (event) {
@@ -428,9 +466,46 @@ var NavbarComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/navbar/navbar.component.html"),
             styles: [__webpack_require__("./src/app/navbar/navbar.component.css")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */], __WEBPACK_IMPORTED_MODULE_2__angular_http__["a" /* Http */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_angularfire2_database__["a" /* AngularFireDatabase */], __WEBPACK_IMPORTED_MODULE_2__angular_http__["a" /* Http */], __WEBPACK_IMPORTED_MODULE_3__user_service__["a" /* UserService */]])
     ], NavbarComponent);
     return NavbarComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/user.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UserService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var UserService = /** @class */ (function () {
+    function UserService() {
+        this.key = "";
+    }
+    UserService.prototype.setKey = function (k) {
+        this.key = k;
+    };
+    UserService.prototype.getKey = function () {
+        return this.key;
+    };
+    UserService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Injectable"])(),
+        __metadata("design:paramtypes", [])
+    ], UserService);
+    return UserService;
 }());
 
 

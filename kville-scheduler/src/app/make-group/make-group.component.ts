@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Http } from '@angular/http';
+import { UserService } from '../user.service';
+
 
 @Component({
   selector: 'app-make-group',
@@ -7,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MakeGroupComponent implements OnInit {
 
-  constructor() { }
+  constructor(private http: Http, private userService: UserService) { }
 
   ngOnInit() {
   }
@@ -18,7 +21,7 @@ export class MakeGroupComponent implements OnInit {
     start: "",
     end: "",
     type: "",
-    users : [{
+    members : [{
       first: '',
       last: '',
       phone: ''
@@ -27,7 +30,8 @@ export class MakeGroupComponent implements OnInit {
 
 
   addMember(){
-    this.data.users.push({
+    console.log('pushing')
+    this.data.members.push({
       first: '',
       last: '',
       phone: ''
@@ -35,8 +39,8 @@ export class MakeGroupComponent implements OnInit {
   }
 
   removeMember(){
-    this.data.users.pop();
-    if(this.data.users.length === 0){
+    this.data.members.pop();
+    if(this.data.members.length === 0){
       this.addMember();
     }
   }
@@ -47,8 +51,15 @@ export class MakeGroupComponent implements OnInit {
       alert("Start date must be before the end date. Please validate your input");
       return;
     }
-    console.log(this.data)
-
+    let info = {
+      data: this.data,
+      key: this.userService.getKey()
+    };
+    console.log(info)
+    this.http.post('/api/create-group', info)
+    .subscribe((post)=>{
+      if(!post.ok) console.log(post)
+    });
   }
 
 }
