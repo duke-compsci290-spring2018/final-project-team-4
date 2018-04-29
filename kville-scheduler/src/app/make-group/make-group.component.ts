@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { UserService } from '../user.service';
+import { Router } from '@angular/router'
 
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from '../user.service';
 })
 export class MakeGroupComponent implements OnInit {
 
-  constructor(private http: Http, private userService: UserService) { }
+  constructor(private http: Http, private userService: UserService, private router: Router) { }
 
   ngOnInit() {
   }
@@ -21,28 +22,46 @@ export class MakeGroupComponent implements OnInit {
     start: "",
     end: "",
     type: "",
-    members : [{
-      first: '',
-      last: '',
-      phone: ''
-    }]
+    members : [],
+  }
+
+  tenting = {
+    blackStart: "",
+    blueStart: "",
+    whiteStart: "",
+    tentingEnd: ""
   }
 
 
   addMember(){
-    console.log('pushing')
-    this.data.members.push({
-      first: '',
-      last: '',
-      phone: ''
-    });
+    for(let i = 0; i < 3; i++){
+      this.data.members.push({
+        first: 'Tenter',
+        last: JSON.stringify(this.data.members.length+1),
+        phone: '123-456-7890'
+      });
+    }
   }
 
   removeMember(){
-    this.data.members.pop();
+    for(let i = 0; i < 3; i++){
+      this.data.members.pop();
+    }
     if(this.data.members.length === 0){
       this.addMember();
     }
+  }
+
+  tent(){
+    this.data.members.length = 0;
+    for(let i = 0; i < 4; i++){
+      this.addMember();
+    }
+  }
+
+  wul(){
+    this.data.members.length = 0;
+    this.addMember();
   }
 
   submit(){
@@ -51,6 +70,9 @@ export class MakeGroupComponent implements OnInit {
       alert("Start date must be before the end date. Please validate your input");
       return;
     }
+    if(this.data.type === "Tent"){
+      this.data['tenting'] = this.tenting;
+    }
     let info = {
       data: this.data,
       key: this.userService.getKey()
@@ -58,7 +80,8 @@ export class MakeGroupComponent implements OnInit {
     console.log(info)
     this.http.post('/api/create-group', info)
     .subscribe((post)=>{
-      if(!post.ok) console.log(post)
+      if(!post.ok) console.log(post);
+      this.router.navigate(['']);
     });
   }
 

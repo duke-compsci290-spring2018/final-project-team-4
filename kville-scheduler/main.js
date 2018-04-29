@@ -41,11 +41,27 @@ app.post('/api/create-group', (req, res) =>{
   res.end();
 });
 
-// app.get('/api/get-members/:group', (req, res) =>{
-//   // console.log(groupRef.child(req.body.group))
-//   console.log('working')
-//   res.end();
-// });
+app.get('/api/get-members/:group', (req, res) =>{
+  // console.log(groupRef.child(req.body.group))
+  groupRef.child(req.params.group).on('value', (snapshot) =>{
+    res.send(snapshot.val().members);
+  });
+});
+
+app.get('/api/get-groups/:key', (req, res) =>{
+  console.log(req.params);
+  userRef.child(req.params.key).on('value', (snapshot) =>{
+    console.log(snapshot.val())
+  });
+  res.end();
+});
+
+app.post('/api/edit-group', (req, res) => {
+  groupRef.child(req.body.group).child('members').set(req.body.newMembers).then((snap) =>{
+    //TODO: add stuff to update sheet
+  });
+  res.end()
+})
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));

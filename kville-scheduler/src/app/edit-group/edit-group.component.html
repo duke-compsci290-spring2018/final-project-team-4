@@ -1,0 +1,21 @@
+<form #editForm="ngForm" (ngSubmit)="submit()">
+  <table class="col-md-10 offset-md-1">
+    <tr>
+      <th>First Name</th>
+      <th>Last Initial</th>
+      <th>Phone</th>
+      <th>New First Name</th>
+      <th>New Last Initial</th>
+      <th>New Phone</th>
+    </tr>
+    <tr *ngFor="let m of members; let i = index">
+      <td>{{m.first}}</td>
+      <td>{{m.last}}</td>
+      <td>{{m.phone}}</td>
+      <td><input class="form-control" name="{{i}}first" [(ngModel)]="newMembers[i].first" /></td>
+      <td><input class="form-control" name="{{i}}last" [(ngModel)]="newMembers[i].last" /></td>
+      <td><input class="form-control" name="{{i}}phone" [(ngModel)]="newMembers[i].phone" /></td>
+    </tr>
+  </table>
+  <button type="submit" class="btn btn-primary">Submit Changes</button>
+</form>

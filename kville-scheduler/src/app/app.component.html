@@ -1,10 +1,21 @@
-<app-navbar></app-navbar>
-<div class="container">
-	<h1>K-ville Scheduler</h1>
-	<app-welcome-page *ngIf="!signedIn()"></app-welcome-page>
-	<h2><a (click)="test()">Test API</a></h2>
-	<a routerLink="make-group" routerLinkActive="active">Make a Group</a>
-	<!-- <app-make-group></app-make-group> -->
-	<app-make-schedule></app-make-schedule>
-	<router-outlet></router-outlet>
+<div class="row">
+	<div class="col-8" id="lgn"></div>
+	<button id="signout-button" class="col-2" (click)="handleSignOutClick()">Sign out</button>
+	<!-- <div class="col-2 g-signin2" (data-onsuccess)="loginName()"></div> -->
+	<google-signin
+  	[clientId]="clientID"
+  	(googleSignInSuccess)="onSuccess($event)">
+	</google-signin>
+	<button (click)="test()">click me</button>
 </div>
+{{loggedIn}}
+<app-welcome-page></app-welcome-page>
+<div>
+	<div class="container">
+		<h1>K-ville Scheduler</h1>
+		<h2><a (click)="test()">Test API</a></h2>
+		<a routerLink="make-group" routerLinkActive="active">Make a Group</a>
+		<a routerLink="edit-group" routerLinkActive="active">Edit a Group</a>
+	</div>
+</div>
+<router-outlet></router-outlet>
