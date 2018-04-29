@@ -36,6 +36,14 @@ export class AppComponent {
 
   }
 
+  test(){
+    let body = {auth: this.user.getAuthResponse()}
+    this.http.post('api/clone-sheet', body).
+    subscribe((post) =>{
+      console.log(post);
+    });
+  }
+
   handleSignOutClick(event):void {
     gapi.auth2.getAuthInstance().signOut()
   }
