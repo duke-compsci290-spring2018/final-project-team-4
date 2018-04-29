@@ -27,7 +27,7 @@ module.exports = ".container {\n\ttext-align: center;\n}"
 /***/ "./src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\"></div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<!-- <div class=\"col-2 g-signin2\" (data-onsuccess)=\"loginName()\"></div> -->\n\t<google-signin\n  \t[clientId]=\"clientID\"\n  \t(googleSignInSuccess)=\"onSuccess($event)\">\n\t</google-signin>\n\t<button (click)=\"test()\">click me</button>\n</div>\n{{loggedIn}}\n<app-welcome-page></app-welcome-page>\n<div>\n\t<div class=\"container\">\n\t\t<h1>K-ville Scheduler</h1>\n\t\t<h2><a (click)=\"test()\">Test API</a></h2>\n\t\t<a routerLink=\"make-group\" routerLinkActive=\"active\">Make a Group</a>\n\t\t<a routerLink=\"edit-group\" routerLinkActive=\"active\">Edit a Group</a>\n\t</div>\n</div>\n<router-outlet></router-outlet>\n"
+module.exports = "<div class=\"row\">\n\t<div class=\"col-8\" id=\"lgn\"></div>\n\t<button id=\"signout-button\" class=\"col-2\" (click)=\"handleSignOutClick()\">Sign out</button>\n\t<!-- <div class=\"col-2 g-signin2\" (data-onsuccess)=\"loginName()\"></div> -->\n\t<google-signin\n  \t[clientId]=\"clientID\"\n  \t(googleSignInSuccess)=\"onSuccess($event)\">\n\t</google-signin>\n\t<button (click)=\"test()\">click me</button>\n</div>\n{{loggedIn}}\n<app-welcome-page></app-welcome-page>\n<div>\n\t<div class=\"container\">\n\t\t<h1>K-ville Scheduler</h1>\n\t\t<h2><a (click)=\"test()\">Test API</a></h2>\n\t\t<a routerLink=\"make-group\" routerLinkActive=\"active\">Make a Group</a>\n\t\t<a routerLink=\"edit-group\" routerLinkActive=\"active\">Edit a Group</a>\n\t\t<a routerLink=\"pick-group\" routerLinkActive=\"active\">Pick a Group</a>\n\t</div>\n</div>\n<router-outlet></router-outlet>\n"
 
 /***/ }),
 
@@ -74,6 +74,13 @@ var AppComponent = /** @class */ (function () {
             .subscribe(function (post) {
             if (!post.ok)
                 console.log(post);
+        });
+    };
+    AppComponent.prototype.test = function () {
+        var body = { auth: this.user.getAuthResponse() };
+        this.http.post('api/clone-sheet', body).
+            subscribe(function (post) {
+            console.log(post);
         });
     };
     AppComponent.prototype.handleSignOutClick = function (event) {
@@ -220,7 +227,7 @@ var EditGroupComponent = /** @class */ (function () {
         this.userService = userService;
         this.members = [];
         this.newMembers = [];
-        this.http.get('/api/get-members/-LBEax8hyLCpfa_FHIRA')
+        this.http.get('/api/get-members/-LBI7JG3W57TOwMhzT-f')
             .subscribe(function (post) {
             console.log(post);
             _this.members = post.json();

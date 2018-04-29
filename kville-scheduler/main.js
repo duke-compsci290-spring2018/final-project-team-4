@@ -36,7 +36,7 @@ const NIGHTS_SHEET_ID = 1;
 
 app.post('/api/create-group', (req, res) =>{
   groupRef.push(req.body.data).then((snap) =>{
-    userRef.child(req.body.key).child('groups').push(snap.key)
+    userRef.child(req.body.key).child('groups').push({key:snap.key, name:req.body.data.groupName})
   });
   res.end();
 });
@@ -51,9 +51,8 @@ app.get('/api/get-members/:group', (req, res) =>{
 app.get('/api/get-groups/:key', (req, res) =>{
   console.log(req.params);
   userRef.child(req.params.key).on('value', (snapshot) =>{
-    console.log(snapshot.val())
+    res.send(snapshot.val().groups)
   });
-  res.end();
 });
 
 app.post('/api/edit-group', (req, res) => {

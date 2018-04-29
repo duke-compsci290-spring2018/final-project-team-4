@@ -13,7 +13,7 @@ export class EditGroupComponent implements OnInit {
   newMembers = []
 
   constructor(private http: Http, private userService: UserService) {
-    this.http.get('/api/get-members/-LBEax8hyLCpfa_FHIRA')
+    this.http.get('/api/get-members/-LBI7JG3W57TOwMhzT-f')
     .subscribe((post)=>{
       console.log(post)
       this.members = post.json();
