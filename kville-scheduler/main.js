@@ -42,11 +42,27 @@ app.post('/api/create-group', (req, res) =>{
   res.end();
 });
 
-// app.get('/api/get-members/:group', (req, res) =>{
-//   // console.log(groupRef.child(req.body.group))
-//   console.log('working')
-//   res.end();
-// });
+app.get('/api/get-members/:group', (req, res) =>{
+  // console.log(groupRef.child(req.body.group))
+  groupRef.child(req.params.group).on('value', (snapshot) =>{
+    res.send(snapshot.val().members);
+  });
+});
+
+app.get('/api/get-groups/:key', (req, res) =>{
+  console.log(req.params);
+  userRef.child(req.params.key).on('value', (snapshot) =>{
+    console.log(snapshot.val())
+  });
+  res.end();
+});
+
+app.post('/api/edit-group', (req, res) => {
+  groupRef.child(req.body.group).child('members').set(req.body.newMembers).then((snap) =>{
+    //TODO: add stuff to update sheet
+  });
+  res.end()
+})
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
@@ -83,6 +99,7 @@ app.post('/api/save-user', (req, res) =>{
 
 app.post('/api/clone-sheet', (req, res) => {
   // TODO need auth somehow!!
+  console.log('clone sheet')
   fs.readFile('client_secret.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
@@ -236,7 +253,7 @@ function cloneDailyScheduleSheet(auth, params) {
 
     params.dailyTemplateSheetId = response.data.sheetId;
 
-    fs.readFile('client_secret.json', async (err, content) => {
+    fs.readFile('client_secret.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
       authorize(JSON.parse(content), cloneNightsScheduleSheet, params);
     });
@@ -271,7 +288,7 @@ function cloneNightsScheduleSheet(auth, params) {
 
     params.nightsSheetId = response.data.sheetId;
 
-    fs.readFile('client_secret.json', async (err, content) => {
+    fs.readFile('client_secret.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
       authorize(JSON.parse(content), batchUpdatesForNewSpreadsheet, params);
     });
@@ -336,7 +353,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
     "duplicateSheet": {
       "sourceSheetId": params.nightsSheetId,
       "insertSheetIndex": 1,
-      "newSheetId": 1, 
+      "newSheetId": 1,
       "newSheetName": "Nights",
     }
   });
@@ -400,7 +417,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
           "values": nameValuesRow,
         }
       ],
-      "fields": "userEnteredValue" 
+      "fields": "userEnteredValue"
     }
   });
 
@@ -410,14 +427,14 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
       "start": {
         "sheetId": NIGHTS_SHEET_ID,
         "rowIndex": 0,
-        "columnIndex": 5, 
+        "columnIndex": 5,
       },
       "rows": [
         {
           "values": nameValuesRow,
         }
       ],
-      "fields": "userEnteredValue" 
+      "fields": "userEnteredValue"
     }
   });
 
@@ -426,7 +443,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
     var d = startDate, i = 2, currCalendarRow = 16, currNightRow = 2, rowIndexLastDayOfPreviousTentingPeriod = 1;
     d <= endDate;
     d.setDate(d.getDate() + 1), i++, currNightRow++
-    ) 
+    )
   {
 
     var month = d.getMonth() + 1; // months are 0 indexed bc JS is stupid
@@ -512,13 +529,13 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
             ]
           }
         ],
-        "fields": "*" 
+        "fields": "*"
       }
     });
 
     if (d.getDay() == 6) {
       currCalendarRow++; // new week on generated calendar
-    } 
+    }
 
 
     // SET UP NIGHTS SHEET
@@ -559,7 +576,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
             ]
           }
         ],
-        "fields": "userEnteredValue" 
+        "fields": "userEnteredValue"
       }
     });
 
@@ -568,7 +585,6 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
     var isLastNightOfColorSeason = ((startOfBlueDate - d) == msInDay || (startOfWhiteDate - d) == msInDay || (endDate - d) == 0);
     if (isLastNightOfColorSeason) { // if last night of black, blue, or white tenting
       
-
       batchRequest.push({
         "updateCells": {
           "start": {
@@ -600,7 +616,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
           "fields": "userEnteredValue"
         }
       });
-      
+
       batchRequest.push({
         "repeatCell": {
           "range": {
@@ -617,8 +633,6 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
         }
       });
 
-      batchRequest.push
-      
       currNightRow++;
       rowIndexLastDayOfPreviousTentingPeriod = currNightRow;
     }

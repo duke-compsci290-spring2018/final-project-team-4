@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms'
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { NavbarComponent } from './navbar/navbar.component';
 import { WelcomePageComponent } from './welcome-page/welcome-page.component';
 
 import { AngularFireModule } from 'angularfire2';
@@ -15,24 +14,27 @@ import { GoogleSignInComponent } from 'angular-google-signin';
 
 import { environment } from './../environments/environment';
 import { GroupsPageComponent } from './groups-page/groups-page.component';
-import { MakeScheduleComponent } from './make-schedule/make-schedule.component';
 import { MakeGroupComponent } from './make-group/make-group.component';
 import { UserService } from './user.service';
+import { EditGroupComponent } from './edit-group/edit-group.component';
+import { PickGroupComponent } from './pick-group/pick-group.component';
 
 
 const routes: Routes = [
-  {path: 'make-group', component: MakeGroupComponent}
+  {path: 'make-group', component: MakeGroupComponent},
+  {path: 'edit-group', component: EditGroupComponent},
+  {path: 'pick-group', component: PickGroupComponent},
 ]
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavbarComponent,
     WelcomePageComponent,
     GroupsPageComponent,
     GoogleSignInComponent,
-    MakeScheduleComponent,
-    MakeGroupComponent
+    MakeGroupComponent,
+    EditGroupComponent,
+    PickGroupComponent
   ],
   imports: [
     BrowserModule,

@@ -79002,11 +79002,11 @@ var VERSION = new __WEBPACK_IMPORTED_MODULE_1__angular_core__["Version"]('5.2.10
 /* unused harmony export RouterEvent */
 /* unused harmony export RoutesRecognized */
 /* unused harmony export RouteReuseStrategy */
-/* unused harmony export Router */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Router; });
 /* unused harmony export ROUTES */
 /* unused harmony export ROUTER_CONFIGURATION */
 /* unused harmony export ROUTER_INITIALIZER */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RouterModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return RouterModule; });
 /* unused harmony export provideRoutes */
 /* unused harmony export ChildrenOutletContexts */
 /* unused harmony export OutletContext */
@@ -105132,7 +105132,6 @@ var AngularFireDatabaseModule = (function () {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__public_api__ = __webpack_require__("./node_modules/angularfire2/database/public_api.js");
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__public_api__["a"]; });
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__public_api__["b"]; });
 
 //# sourceMappingURL=index.js.map
 
@@ -105535,7 +105534,7 @@ function fromRef(ref, event, listenType) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__database__ = __webpack_require__("./node_modules/angularfire2/database/database.js");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__database__["a"]; });
+/* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__list_changes__ = __webpack_require__("./node_modules/angularfire2/database/list/changes.js");
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__list_create_reference__ = __webpack_require__("./node_modules/angularfire2/database/list/create-reference.js");
@@ -105549,7 +105548,7 @@ function fromRef(ref, event, listenType) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__observable_fromRef__ = __webpack_require__("./node_modules/angularfire2/database/observable/fromRef.js");
 /* unused harmony namespace reexport */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__database_module__ = __webpack_require__("./node_modules/angularfire2/database/database.module.js");
-/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_7__database_module__["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_7__database_module__["a"]; });
 
 
 
