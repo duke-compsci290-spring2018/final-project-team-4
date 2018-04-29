@@ -103,19 +103,25 @@ app.post('/api/clone-sheet', (req, res) => {
   fs.readFile('client_secret.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
+    let names = [];
+    let numbers = [];
+    for(let i = 0; i < req.body.info.data.members.length; i++){
+      names.push(req.body.info.data.members[i].first + ' ' + req.body.info.data.members[i].last);
+      numbers.push(req.body.info.data.members[i].phone);
+    }
     var params = {
-      'groupId': 'LBH7PHGQCCxuXCiQKOE',
-      'groupType': 'TENT',
+      'groupId': req.body.groupID,
+      'groupType': req.body.info.data.type,
 
-      'names': ['Addison', 'Blake'],
-      'numbers': ['504-920-4520', '1'],
+      'names': names,
+      'numbers': numbers,
 
-      'startOfBlackDateTime': new Date(2018, 00, 12, 23, 00, 00),
-      'startOfBlueDateTime': new Date(2018, 00, 26, 23, 00, 00),
-      'startOfWhiteDateTime': new Date(2018, 01, 09, 23, 00, 00),
+      'startOfBlackDateTime': new Date(req.body.info.data.tenting.blackStart),
+      'startOfBlueDateTime': new Date(req.body.info.data.tenting.blueStart),
+      'startOfWhiteDateTime': new Date(req.body.info.data.tenting.whiteStart),
 
-      'startDateTime': new Date(2018, 00, 28, 23, 00, 00),
-      'endDateTime': new Date(2018, 01, 22, 12, 00, 00),
+      'startDateTime': new Date(req.body.info.data.start),
+      'endDateTime': new Date(req.body.info.data.end),
     };
     authorize(JSON.parse(content), createSpreadsheet, params)
   });
@@ -202,7 +208,7 @@ function createSpreadsheet(auth, params) {
       if (params.groupType == 'WUL') {
         authorize(JSON.parse(content), cloneWULMasterDataSheet, params);
       }
-      if (params.groupType == 'TENT') {
+      if (params.groupType == 'Tent') {
         authorize(JSON.parse(content), cloneMasterDataSheet, params);
       }
     });
@@ -386,17 +392,6 @@ function cloneWULDailyScheduleSheet(auth, params) {
 
 
 function batchUpdatesForNewSpreadsheet(auth, params) {
-
-  // var groupId = params.groupId;
-  // console.log(groupId);
-
-  // var name;
-  // groupRef.child(groupId).child('members').once("value", function(snapshot){
-  //         name = 5;
-  //         console.log('inside', name);
-  //         console.log('inside', name);
-  //       });;
-  // console.log('outside', name);
 
   var names = params.names;
   var numbers = params.numbers;
