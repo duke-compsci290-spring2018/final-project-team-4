@@ -81,7 +81,10 @@ export class MakeGroupComponent implements OnInit {
     this.http.post('/api/create-group', info)
     .subscribe((post)=>{
       if(!post.ok) console.log(post);
-      this.router.navigate(['']);
+      this.http.post('/api/clone-sheet', {info: info, groupID: post.text()}).subscribe((post)=>{
+        console.log('yes please')
+        this.router.navigate(['']);
+      })    
     });
   }
 
