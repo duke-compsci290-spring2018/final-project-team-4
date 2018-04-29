@@ -25,11 +25,14 @@ const TOKEN_PATH = 'credentials.json';
 
 // TEMPLATE ID REFS
 const TEMPLATE_SPREADSHEET_ID = '1eHFGt_nyilZHwr1_0dnY4rdqb1G5qYunCYUl1d6UAc4';
+const TEMPLATE_MASTER_DATA_SHEET_ID = 0;
+const TEMPLATE_WUL_MASTER_DATA_SHEET_ID = 141932026;
 const TEMPLATE_NIGHT_SHEET_ID = 167009206;
 const TEMPLATE_DAILY_SCHEDULE_SHEET_ID = 579430821;
+const TEMPLATE_WUL_DAILY_SCHEDULE_SHEET_ID = 781228253;
 
 // NEW SPREADSHEET ID REFS
-const MASTER_DATA_SHEET_ID = 0;
+const MASTER_DATA_SHEET_ID = 1200;
 const NIGHTS_SHEET_ID = 1;
 
 
@@ -37,8 +40,8 @@ const NIGHTS_SHEET_ID = 1;
 app.post('/api/create-group', (req, res) =>{
   groupRef.push(req.body.data).then((snap) =>{
     userRef.child(req.body.key).child('groups').push({key:snap.key, name:req.body.data.groupName})
+    res.end(snap.key);
   });
-  res.end();
 });
 
 app.get('/api/get-members/:group', (req, res) =>{
@@ -96,11 +99,24 @@ app.post('/api/save-user', (req, res) =>{
 });
 
 app.post('/api/clone-sheet', (req, res) => {
-  // TODO need auth somehow!!
+  console.log(req.body)
   fs.readFile('client_secret.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
-    var params = {};
+    var params = {
+      'groupId': 'LBH7PHGQCCxuXCiQKOE',
+      'groupType': 'TENT',
+
+      'names': ['Addison', 'Blake'],
+      'numbers': ['504-920-4520', '1'],
+
+      'startOfBlackDateTime': new Date(2018, 00, 12, 23, 00, 00),
+      'startOfBlueDateTime': new Date(2018, 00, 26, 23, 00, 00),
+      'startOfWhiteDateTime': new Date(2018, 01, 09, 23, 00, 00),
+
+      'startDateTime': new Date(2018, 00, 28, 23, 00, 00),
+      'endDateTime': new Date(2018, 01, 22, 12, 00, 00),
+    };
     authorize(JSON.parse(content), createSpreadsheet, params)
   });
   res.send("working");
@@ -164,7 +180,7 @@ function createSpreadsheet(auth, params) {
   var request = {
     resource: {
       "properties": {
-        "title": "K-ville Schedule"
+        "title": 'K-Ville ' + params.groupType + ' Schedule'
       }
     },
 
@@ -181,6 +197,47 @@ function createSpreadsheet(auth, params) {
     params.activeSpreadsheetID = response.data.spreadsheetId; // TODO store this new spreadsheetId to firebase so we have access to it
 
     fs.readFile('client_secret.json', (err, content) => {
+      if (err) return console.log('Error loading client secret file:', err);
+
+      if (params.groupType == 'WUL') {
+        authorize(JSON.parse(content), cloneWULMasterDataSheet, params);
+      }
+      if (params.groupType == 'TENT') {
+        authorize(JSON.parse(content), cloneMasterDataSheet, params);
+      }
+    });
+  });
+}
+
+function cloneMasterDataSheet(auth, params) {
+
+  // COPY DAILY SCHEDULE TEMPLATE TO NEW DOC
+
+  var request = {
+    // The ID of the spreadsheet containing the sheet to copy.
+    spreadsheetId: TEMPLATE_SPREADSHEET_ID,
+
+    // The ID of the sheet to copy.
+    sheetId: TEMPLATE_MASTER_DATA_SHEET_ID,
+
+    resource: {
+      // The ID of the spreadsheet to copy the sheet to.
+      destinationSpreadsheetId: params.activeSpreadsheetID,
+    },
+
+    auth: auth,
+  };
+
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.sheets.copyTo(request, function(err, response) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    params.masterDataTemplateSheetId = response.data.sheetId;
+
+    fs.readFile('client_secret.json', async (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
       authorize(JSON.parse(content), cloneDailyScheduleSheet, params);
     });
@@ -257,19 +314,101 @@ function cloneNightsScheduleSheet(auth, params) {
   });
 }
 
+function cloneWULMasterDataSheet(auth, params) {
+
+  // COPY DAILY SCHEDULE TEMPLATE TO NEW DOC
+
+  var request = {
+    // The ID of the spreadsheet containing the sheet to copy.
+    spreadsheetId: TEMPLATE_SPREADSHEET_ID,
+
+    // The ID of the sheet to copy.
+    sheetId: TEMPLATE_WUL_MASTER_DATA_SHEET_ID,
+
+    resource: {
+      // The ID of the spreadsheet to copy the sheet to.
+      destinationSpreadsheetId: params.activeSpreadsheetID,
+    },
+
+    auth: auth,
+  };
+
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.sheets.copyTo(request, function(err, response) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    params.masterDataTemplateSheetId = response.data.sheetId;
+
+    fs.readFile('client_secret.json', async (err, content) => {
+      if (err) return console.log('Error loading client secret file:', err);
+      authorize(JSON.parse(content), cloneWULDailyScheduleSheet, params);
+    });
+  });
+}
+
+function cloneWULDailyScheduleSheet(auth, params) {
+
+  // COPY DAILY SCHEDULE TEMPLATE TO NEW DOC
+
+  var request = {
+    // The ID of the spreadsheet containing the sheet to copy.
+    spreadsheetId: TEMPLATE_SPREADSHEET_ID,
+
+    // The ID of the sheet to copy.
+    sheetId: TEMPLATE_WUL_DAILY_SCHEDULE_SHEET_ID,
+
+    resource: {
+      // The ID of the spreadsheet to copy the sheet to.
+      destinationSpreadsheetId: params.activeSpreadsheetID,
+    },
+
+    auth: auth,
+  };
+
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.sheets.copyTo(request, function(err, response) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    params.dailyTemplateSheetId = response.data.sheetId;
+
+    fs.readFile('client_secret.json', (err, content) => {
+      if (err) return console.log('Error loading client secret file:', err);
+      authorize(JSON.parse(content), batchUpdatesForNewWULSpreadsheet, params);
+    });
+  });
+}
+
 
 function batchUpdatesForNewSpreadsheet(auth, params) {
 
-  // TODO get names, dates, etc from params
-  var names = ['Addison', 'Blake', 'Thomas', 'Emily', 'Charlotte', 'Grant', 'Joel', 'Katie', 'Ken', 'Noah', 'Eric', 'Reed'];
-  var numbers = ['504-920-4520', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+  // var groupId = params.groupId;
+  // console.log(groupId);
 
-  var startOfBlackDateTime = new Date(2018, 00, 12, 23, 00, 00);
-  var startOfBlueDateTime = new Date(2018, 00, 26, 23, 00, 00);
-  var startOfWhiteDateTime = new Date(2018, 01, 09, 23, 00, 00);
+  // var name;
+  // groupRef.child(groupId).child('members').once("value", function(snapshot){
+  //         name = 5;
+  //         console.log('inside', name);
+  //         console.log('inside', name);
+  //       });;
+  // console.log('outside', name);
 
-  var startDateTime = new Date(2018, 00, 15, 23, 00, 00);
-  var endDateTime = new Date(2018, 01, 22, 12, 00, 00);
+  var names = params.names;
+  var numbers = params.numbers;
+
+  const NUM_TENTERS = 12;
+
+  var startOfBlackDateTime = params.startOfBlackDateTime;
+  var startOfBlueDateTime = params.startOfBlueDateTime;
+  var startOfWhiteDateTime = params.startOfWhiteDateTime;
+
+  var startDateTime = params.startDateTime;
+  var endDateTime = params.endDateTime;
 
   var startOfBlackDate = new Date(startOfBlackDateTime.getFullYear(), startOfBlackDateTime.getMonth(), startOfBlackDateTime.getDate(),0,0,0);
   var startOfBlueDate = new Date(startOfBlueDateTime.getFullYear(), startOfBlueDateTime.getMonth(), startOfBlueDateTime.getDate(),0,0,0);
@@ -280,21 +419,33 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
 
 
   var batchRequest = []; // to build list of synchronous update requests
-  var nameValuesCol = []; // to build column of names and phone numbers for data sheet
+  var masterDataMatrixValues = []; // to build column of names and phone numbers for data sheet and formulas following it
   var nameValuesRow = []; // to build list of name values to be added to daily sheet
 
 
   // BUILD MASTER DATA SHEET, NIGHTS SHEET, AND DAILY TEMPLATE SHEET
 
+
+  // duplicate masterd data sheet and delete cloned one (lets us set sheetId/index because other API call doesn't)
   batchRequest.push({
-    "updateSheetProperties": {
-      "properties": {
-        "sheetId": MASTER_DATA_SHEET_ID,
-        "title": "Master",
-      },
-      "fields": "title"
+    "duplicateSheet": {
+      "sourceSheetId": params.masterDataTemplateSheetId,
+      "insertSheetIndex": 0,
+      "newSheetId": MASTER_DATA_SHEET_ID,
+      "newSheetName": "Master",
     }
   });
+  batchRequest.push({
+    "deleteSheet": {
+      "sheetId": params.masterDataTemplateSheetId,
+    }
+  });
+  batchRequest.push({
+    "deleteSheet": {
+      "sheetId": 0, // delete the default first sheet
+    }
+  });
+
 
   // duplicate nights sheet and delete cloned one (lets us set sheetId/index because other API call doesn't)
   batchRequest.push({
@@ -308,46 +459,40 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
   batchRequest.push({
     "deleteSheet": {
       "sheetId": params.nightsSheetId,
-
     }
   });
 
-  nameValuesCol.push({
-    "values": [
-      {"userEnteredValue": {"stringValue": "Person"}},
-      {"userEnteredValue": {"stringValue": "Phone #"}},
-      {"userEnteredValue": {"stringValue": "Nights"}},
-      {"userEnteredValue": {"stringValue": "Day Hrs - Black"}},
-      {"userEnteredValue": {"stringValue": "Day Hrs - Blue"}},
-      {"userEnteredValue": {"stringValue": "Day Hrs - White"}},
-      {"userEnteredValue": {"stringValue": "Day Hrs - Total"}},
-    ]
-  });
 
-  for (var i = 0; i < names.length; i++) {
+  for (var i = 0; i < NUM_TENTERS; i++) {
     nameValuesRow.push(
-      {"userEnteredValue": {"stringValue": names[i]}}
+      {"userEnteredValue": {"formulaValue": '=\'Master\'!A' + (i+2)}}
     );
-    nameValuesCol.push({
+    var name = (i < names.length) ? names[i] : ('Tenter ' + (i+1));
+    var number = (i < numbers.length) ? numbers[i] : '';
+    masterDataMatrixValues.push({
       "values": [
-        {"userEnteredValue": {"stringValue": names[i]}},
-        {"userEnteredValue": {"stringValue": numbers[i]}}
+        {"userEnteredValue": {"stringValue": name}},
+        {"userEnteredValue": {"stringValue": number}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
       ]
     });
   }
 
-  // set names and numbers on data sheet
-  batchRequest.push({
-    "updateCells": {
-      "start": {
-        "sheetId": 0,
-        "rowIndex": 0,
-        "columnIndex": 0,
-      },
-      "rows": nameValuesCol,
-      "fields": "userEnteredValue"
-    }
+
+  masterDataMatrixValues.push({
+    "values": [
+      {"userEnteredValue": {"stringValue": "Each Person Needs:"}},
+      {"userEnteredValue": {"stringValue": "Total:"}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+    ]
   });
+
 
   // set names on daily template sheet
   batchRequest.push({
@@ -422,19 +567,23 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
 
     // Add day to Data Sheet Calendar
     var borderColor;
+    var currTentingSeason = '';
     if (d < startOfBlueDate) {
+      currTentingSeason = 'BLACK';
       borderColor = { // black border for black tenting
         "red": 0.0,
         "green": 0.0,
         "blue": 0.0,
       };
     } else if (d < startOfWhiteDate) {
+      currTentingSeason = 'BLUE';
       borderColor = { // blue border for blue tenting
         "red": 0.0,
         "green": 0.0,
         "blue": 1.0,
       };
     } else {
+      currTentingSeason = 'WHITE';
       borderColor = { // white border for white tenting
         "red": 1.0,
         "green": 1.0,
@@ -449,7 +598,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
     batchRequest.push({
       "updateCells": {
         "start": {
-          "sheetId": 0,
+          "sheetId": MASTER_DATA_SHEET_ID,
           "rowIndex": currCalendarRow,
           "columnIndex": d.getDay(),
         },
@@ -512,7 +661,7 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
                 "userEnteredValue": {"formulaValue": '=COUNTIF(F' + currNightRow + ':Q' + currNightRow + ',"T"' + ')'},
               },
               {
-                "userEnteredValue": {"formulaValue": '=COUNTIF(F' + currNightRow + ':Q' + currNightRow + ',"G"' + '> 0)'},
+                "userEnteredValue": {"formulaValue": '=COUNTIF(F' + currNightRow + ':Q' + currNightRow + ',"G"' + ') > 0'},
               }
             ]
           }
@@ -523,34 +672,33 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
 
 
     var msInDay = 86400000;
-    if ((startOfBlueDate - d) == msInDay || (startOfWhiteDate - d) == msInDay || (endDate - d) == 0) { // if last night of black, blue, or white tenting
-
-      var colorPeriodString = "Black";
-      if ((startOfWhiteDate - d) == msInDay) {
-        colorPeriodString = "Blue";
-      }
-      if ((endDate - d) == 0) {
-        colorPeriodString = "White";
-      }
+    var isLastNightOfColorSeason = ((startOfBlueDate - d) == msInDay || (startOfWhiteDate - d) == msInDay || (endDate - d) == 0);
+    if (isLastNightOfColorSeason) { // if last night of black, blue, or white tenting
 
       batchRequest.push({
         "updateCells": {
           "start": {
             "sheetId": NIGHTS_SHEET_ID,
             "rowIndex": currNightRow,
-            "columnIndex": 2,
+            "columnIndex": 0,
           },
           "rows": [
             {
               "values": [
                 {
-                  "userEnteredValue": {"stringValue": colorPeriodString},
+                  "userEnteredValue": {"stringValue": "shifts per person:"},
+                },
+                { // estimated number of nights for each tenter
+                  "userEnteredValue": {"formulaValue": '=COUNTIF(E' + (rowIndexLastDayOfPreviousTentingPeriod + 1) + ':E' + currNightRow + ',FALSE)*' + numNeededAtNight + '/' + NUM_TENTERS},
                 },
                 {
-                  "userEnteredValue": {"stringValue": "Tenting"},
+                  "userEnteredValue": {"stringValue": currTentingSeason},
                 },
                 {
-                  "userEnteredValue": {"stringValue": "Total:"},
+                  "userEnteredValue": {"stringValue": "TENTING"},
+                },
+                {
+                  "userEnteredValue": {"stringValue": "TOTAL:"},
                 },
               ]
             }
@@ -581,7 +729,6 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
 
 
 
-
     // FIX FOR BLACK TENTING
 
     // if during black tenting, you need 2 during the day instead of 1 (template has 1 by default)
@@ -604,11 +751,73 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
     }
 
 
+    // UPDATE FORMULAS ON MASTER DATA SHEET
+
+    var rowIndex = NUM_TENTERS;
+    var updateFormula;
+
+    var colIndex;
+    switch (currTentingSeason) {
+      case 'BLACK': colIndex = 3; break;
+      case 'BLUE': colIndex = 4; break;
+      case 'WHITE': colIndex = 5; break;
+    }
+
+    updateFormula = masterDataMatrixValues[rowIndex].values[colIndex].userEnteredValue.formulaValue + '+(\'' + sheetName + '\'!' + 'B81)/' + NUM_TENTERS;
+    masterDataMatrixValues[rowIndex].values[colIndex] = {"userEnteredValue": {"formulaValue": updateFormula}};
+
+    updateFormula = '=D' + (rowIndex + 1) + '+E' + (rowIndex + 1) + '+F' + (rowIndex + 2);
+    masterDataMatrixValues[rowIndex].values[6] = {"userEnteredValue": {"formulaValue": updateFormula}};
+
+    if (isLastNightOfColorSeason) {
+        // update total nights needed
+        updateFormula = masterDataMatrixValues[rowIndex].values[2].userEnteredValue.formulaValue + '+(\'Nights\'!B' + currNightRow + ')';
+        masterDataMatrixValues[rowIndex].values[2] = {"userEnteredValue": {"formulaValue": updateFormula}};
+    }
+
+
+
+    for ( let i = 0; i < NUM_TENTERS; i++ ){
+
+      var colLetter = String.fromCharCode(97 + i + 4);
+
+      rowIndex = i;
+      updateFormula = masterDataMatrixValues[rowIndex].values[colIndex].userEnteredValue.formulaValue + '+(\'' + sheetName + '\'!' + colLetter + '81)';
+      masterDataMatrixValues[rowIndex].values[colIndex] = {"userEnteredValue": {"formulaValue": updateFormula}};
+
+      // if last night of tenting season, update Nights count on master data
+      if (isLastNightOfColorSeason) {
+        colLetter = String.fromCharCode(97 + i + 5); // Names are one column over on Nights sheet
+        updateFormula = masterDataMatrixValues[rowIndex].values[2].userEnteredValue.formulaValue + '+(\'Nights\'!' + colLetter + currNightRow + ')';
+        masterDataMatrixValues[rowIndex].values[2] = {"userEnteredValue": {"formulaValue": updateFormula}};
+      }
+
+      // set total count (yes this updates/overwrites every time deal with it I'm putting it here)
+      updateFormula = '=D' + (rowIndex + 2) + '+E' + (rowIndex + 2) + '+F' + (rowIndex + 2);
+      masterDataMatrixValues[rowIndex].values[6] = {"userEnteredValue": {"formulaValue": updateFormula}};
+
+    }
+
+
   }
 
   batchRequest.push({
     "deleteSheet": {
       "sheetId": params.dailyTemplateSheetId
+    }
+  });
+
+
+  // set data in master data
+  batchRequest.push({
+    "updateCells": {
+      "start": {
+        "sheetId": MASTER_DATA_SHEET_ID,
+        "rowIndex": 1,
+        "columnIndex": 0,
+      },
+      "rows": masterDataMatrixValues,
+      "fields": "userEnteredValue"
     }
   });
 
@@ -629,4 +838,175 @@ function batchUpdatesForNewSpreadsheet(auth, params) {
       return;
     }
   });
+}
+
+function batchUpdatesForNewWULSpreadsheet(auth, params) {
+
+  var names = params.names;
+  var numbers = params.numbers;
+  var groupType = params.groupType;
+
+  var startDateTime = params.startDateTime;
+  var endDateTime = params.endDateTime;
+
+  var startDate = new Date(startDateTime.getFullYear(), startDateTime.getMonth(), startDateTime.getDate(),0,0,0);
+  var endDate = new Date(endDateTime.getFullYear(), endDateTime.getMonth(), endDateTime.getDate(),0,0,0);
+
+
+  var batchRequest = []; // to build list of synchronous update requests
+  var masterDataMatrixValues = []; // to build column of names and phone numbers for data sheet and formulas following it
+  var nameValuesRow = []; // to build list of name values to be added to daily sheet
+
+
+  // BUILD MASTER DATA SHEET, NIGHTS SHEET, AND DAILY TEMPLATE SHEET
+
+
+  // duplicate masterd data sheet and delete cloned one (lets us set sheetId/index because other API call doesn't)
+  batchRequest.push({
+    "duplicateSheet": {
+      "sourceSheetId": params.masterDataTemplateSheetId,
+      "insertSheetIndex": 0,
+      "newSheetId": MASTER_DATA_SHEET_ID,
+      "newSheetName": "Master",
+    }
+  });
+  batchRequest.push({
+    "deleteSheet": {
+      "sheetId": params.masterDataTemplateSheetId,
+    }
+  });
+  batchRequest.push({
+    "deleteSheet": {
+      "sheetId": 0, // delete the default first sheet
+    }
+  });
+
+
+
+  masterDataMatrixValues.push({
+    "values": [
+      {"userEnteredValue": {"stringValue": "Person"}},
+      {"userEnteredValue": {"stringValue": "Phone #"}},
+      {"userEnteredValue": {"stringValue": "Total Hours"}},
+    ]
+  });
+
+  for (var i = 0; i < 30; i ++) {
+    nameValuesRow.push(
+      {"userEnteredValue": {"formulaValue": '=\'Master\'!A' + (i+2)}}
+    );
+  }
+  for (var i = 0; i < names.length; i++) {
+    masterDataMatrixValues.push({
+      "values": [
+        {"userEnteredValue": {"stringValue": names[i]}},
+        {"userEnteredValue": {"stringValue": numbers[i]}},
+        {"userEnteredValue": {"formulaValue": '=(0)'}},
+      ]
+    });
+  }
+
+  // set names on daily template sheet
+  batchRequest.push({
+    "updateCells": {
+      "start": {
+        "sheetId": params.dailyTemplateSheetId,
+        "rowIndex": 0,
+        "columnIndex": 4, // index to begin putting names for daily schedule
+      },
+      "rows": [
+        {
+          "values": nameValuesRow,
+        }
+      ],
+      "fields": "userEnteredValue"
+    }
+  });
+
+
+  for (
+    var d = startDate, i = 2;
+    d <= endDate;
+    d.setDate(d.getDate() + 1), i++
+    )
+  {
+
+    var month = d.getMonth() + 1; // months are 0 indexed bc JS is stupid
+    var sheetName = "" + month + "/" + d.getDate();
+    switch ( d.getDay() ) {
+      case 0: sheetName += " Su"; break;
+      case 1: sheetName += " Mo"; break;
+      case 2: sheetName += " Tu"; break;
+      case 3: sheetName += " We"; break;
+      case 4: sheetName += " Th"; break;
+      case 5: sheetName += " Fr"; break;
+      case 6: sheetName += " Sa"; break;
+    }
+    var newSheetId = "" + d.getFullYear() + d.getMonth() + d.getDate();
+
+    // duplicate daily schedule for each day
+    batchRequest.push({
+      "duplicateSheet": {
+        "sourceSheetId": params.dailyTemplateSheetId,
+        "insertSheetIndex": i,
+        "newSheetId": newSheetId,
+        "newSheetName": sheetName,
+      }
+    });
+
+
+    // UPDATE FORMULAS ON MASTER DATA SHEET
+
+    var rowIndex;
+    var colIndex = 2;
+
+    for ( let i = 0; i < names.length; i++ ) {
+
+      var colLetter = String.fromCharCode(97 + i + 4);
+
+      rowIndex = i + 1;
+      updateFormula = masterDataMatrixValues[rowIndex].values[colIndex].userEnteredValue.formulaValue + '+(\'' + sheetName + '\'!' + colLetter + '100)';
+      masterDataMatrixValues[rowIndex].values[colIndex] = {"userEnteredValue": {"formulaValue": updateFormula}};
+    }
+
+  }
+
+  batchRequest.push({
+    "deleteSheet": {
+      "sheetId": params.dailyTemplateSheetId
+    }
+  });
+
+
+  // set data in master data
+  batchRequest.push({
+    "updateCells": {
+      "start": {
+        "sheetId": MASTER_DATA_SHEET_ID,
+        "rowIndex": 0,
+        "columnIndex": 0,
+      },
+      "rows": masterDataMatrixValues,
+      "fields": "userEnteredValue"
+    }
+  });
+
+  var request = {
+    spreadsheetId: params.activeSpreadsheetID,
+
+    resource: {
+      requests: batchRequest,
+    },
+
+    auth: auth,
+  };
+
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.batchUpdate(request, function(err, response) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+  });
+
 }

@@ -70,18 +70,20 @@ export class MakeGroupComponent implements OnInit {
       alert("Start date must be before the end date. Please validate your input");
       return;
     }
-    if(this.data.type === "Tent"){
-      this.data['tenting'] = this.tenting;
-    }
+    this.data['tenting'] = this.tenting;
     let info = {
       data: this.data,
       key: this.userService.getKey()
     };
-    console.log(info)
+    console.log('making group')
     this.http.post('/api/create-group', info)
     .subscribe((post)=>{
       if(!post.ok) console.log(post);
-      this.router.navigate(['']);
+      console.log(post.text())
+      this.http.post('/api/clone-sheet', {info: info, groupID: post.text()}).subscribe((post)=>{
+        console.log('yes please')
+        this.router.navigate(['']);
+      })
     });
   }
 
