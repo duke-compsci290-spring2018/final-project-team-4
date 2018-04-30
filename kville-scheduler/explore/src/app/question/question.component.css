@@ -1,0 +1,15 @@
+li{
+  list-style-type: none;
+}
+
+.correct{
+  background-color: green;
+}
+
+.wrong{
+  background-color: red;
+}
+
+.unanswered{
+  background: yellow;
+}

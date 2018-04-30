@@ -1,0 +1,6 @@
+<h2>Pick your Quiz:</h2>
+<div>
+  <ul>
+    <li *ngFor="let quiz of quizzes; let i=index"><a (click)="selectQuiz(i)">{{quiz.title}}</a></li>
+</ul>
+</div>

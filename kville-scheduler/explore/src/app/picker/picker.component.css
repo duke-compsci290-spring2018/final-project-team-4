@@ -1,0 +1,11 @@
+ul{
+  list-style-type: none;
+}
+
+li{
+  margin-bottom: 4px;
+}
+
+a:hover{
+  cursor: pointer;
+}
