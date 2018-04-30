@@ -70,7 +70,7 @@ var AppComponent = /** @class */ (function () {
         var profile = currentUser.getBasicProfile();
         this.user = currentUser;
         this.userService.setKey(this.user.getBasicProfile().Eea);
-        this.http.post('/api/save-user', { auth: this.user.getAuthResponse(), profile: this.user.getBasicProfile() })
+        this.http.post('https://kville-scheduler.herokuapp.com/api/save-user', { auth: this.user.getAuthResponse(), profile: this.user.getBasicProfile() })
             .subscribe(function (post) {
             if (!post.ok)
                 console.log(post);
@@ -79,7 +79,7 @@ var AppComponent = /** @class */ (function () {
     };
     AppComponent.prototype.test = function () {
         var body = { auth: this.user.getAuthResponse() };
-        this.http.post('api/clone-sheet', body).
+        this.http.post('https://kville-scheduler.herokuapp.com/api/clone-sheet', body).
             subscribe(function (post) {
             if (!post.ok)
                 console.log(post);
@@ -179,7 +179,7 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_9_angularfire2_auth__["a" /* AngularFireAuthModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_3__angular_forms__["a" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* RouterModule */].forRoot(routes),
+                __WEBPACK_IMPORTED_MODULE_4__angular_router__["c" /* RouterModule */].forRoot(routes, { useHash: true }),
                 __WEBPACK_IMPORTED_MODULE_17_ngx_pipes__["a" /* NgPipesModule */]
             ],
             providers: [__WEBPACK_IMPORTED_MODULE_14__user_service__["a" /* UserService */]],
@@ -239,7 +239,7 @@ var EditGroupComponent = /** @class */ (function () {
         this.chRef = chRef;
         this.members = [];
         this.newMembers = [];
-        this.http.get('/api/get-members/' + this.routes.snapshot.params['group'])
+        this.http.get('https://kville-scheduler.herokuapp.com/api/get-members/' + this.routes.snapshot.params['group'])
             .subscribe(function (post) {
             if (!post.ok)
                 console.log(post);
@@ -252,7 +252,7 @@ var EditGroupComponent = /** @class */ (function () {
     };
     EditGroupComponent.prototype.submit = function () {
         var _this = this;
-        this.http.post('/api/edit-group', { group: this.routes.snapshot.params['group'], newMembers: this.newMembers }).
+        this.http.post('https://kville-scheduler.herokuapp.com/api/edit-group', { group: this.routes.snapshot.params['group'], newMembers: this.newMembers }).
             subscribe(function (post) {
             if (!post.ok)
                 console.log(post);
@@ -422,11 +422,11 @@ var MakeGroupComponent = /** @class */ (function () {
             key: this.userService.getKey()
         };
         console.log('making group');
-        this.http.post('/api/create-group', info)
+        this.http.post('https://kville-scheduler.herokuapp.com/api/create-group', info)
             .subscribe(function (post) {
             if (!post.ok)
                 console.log(post);
-            _this.http.post('/api/clone-sheet', { info: info, groupID: post.text() }).subscribe(function (post) {
+            _this.http.post('https://kville-scheduler.herokuapp.com/api/clone-sheet', { info: info, groupID: post.text() }).subscribe(function (post) {
                 _this.router.navigate(['pick-group']);
             });
         });
@@ -490,7 +490,7 @@ var PickGroupComponent = /** @class */ (function () {
         this.router = router;
         this.chRef = chRef;
         this.gotGroups = false;
-        this.http.get('/api/get-groups/' + this.userService.getKey())
+        this.http.get('https://kville-scheduler.herokuapp.com/api/get-groups/' + this.userService.getKey())
             .subscribe(function (post) {
             console.log(post.json());
             _this.groups = post.json();

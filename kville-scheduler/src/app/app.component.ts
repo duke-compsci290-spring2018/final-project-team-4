@@ -25,7 +25,7 @@ export class AppComponent {
     let profile: gapi.auth2.BasicProfile = currentUser.getBasicProfile();
     this.user = currentUser;
     this.userService.setKey(this.user.getBasicProfile().Eea);
-    this.http.post('/api/save-user', {auth: this.user.getAuthResponse(), profile: this.user.getBasicProfile()})
+    this.http.post('https://kville-scheduler.herokuapp.com/api/save-user', {auth: this.user.getAuthResponse(), profile: this.user.getBasicProfile()})
     .subscribe((post) =>{
       if(!post.ok) console.log(post);
       this.router.navigate(['pick-group']);
@@ -35,7 +35,7 @@ export class AppComponent {
 
   test(){
     let body = {auth: this.user.getAuthResponse()}
-    this.http.post('api/clone-sheet', body).
+    this.http.post('https://kville-scheduler.herokuapp.com/api/clone-sheet', body).
     subscribe((post) =>{
       if(!post.ok) console.log(post);
     });

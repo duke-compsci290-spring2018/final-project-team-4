@@ -76,10 +76,10 @@ export class MakeGroupComponent implements OnInit {
       key: this.userService.getKey()
     };
     console.log('making group')
-    this.http.post('/api/create-group', info)
+    this.http.post('https://kville-scheduler.herokuapp.com/api/create-group', info)
     .subscribe((post)=>{
       if(!post.ok) console.log(post);
-      this.http.post('/api/clone-sheet', {info: info, groupID: post.text()}).subscribe((post)=>{
+      this.http.post('https://kville-scheduler.herokuapp.com/api/clone-sheet', {info: info, groupID: post.text()}).subscribe((post)=>{
         this.router.navigate(['pick-group']);
       })
     });

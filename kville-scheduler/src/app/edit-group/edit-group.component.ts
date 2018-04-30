@@ -14,7 +14,7 @@ export class EditGroupComponent implements OnInit {
   newMembers = []
 
   constructor(private http: Http, private userService: UserService, private router: Router, private routes: ActivatedRoute, private chRef: ChangeDetectorRef) {
-    this.http.get('/api/get-members/' + this.routes.snapshot.params['group'])
+    this.http.get('https://kville-scheduler.herokuapp.com/api/get-members/' + this.routes.snapshot.params['group'])
     .subscribe((post)=>{
       if(!post.ok) console.log(post);
       this.members = post.json();
@@ -28,7 +28,7 @@ export class EditGroupComponent implements OnInit {
 
 
   submit(){
-    this.http.post('/api/edit-group', {group: this.routes.snapshot.params['group'], newMembers: this.newMembers}).
+    this.http.post('https://kville-scheduler.herokuapp.com/api/edit-group', {group: this.routes.snapshot.params['group'], newMembers: this.newMembers}).
     subscribe((post) =>{
       if(!post.ok) console.log(post);
       this.router.navigate(['pick-group']);

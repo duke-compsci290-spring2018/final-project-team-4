@@ -47,7 +47,7 @@ const routes: Routes = [
     AngularFireAuthModule,
     HttpModule,
     FormsModule,
-    RouterModule.forRoot(routes),
+    RouterModule.forRoot(routes, { useHash: true }),
     NgPipesModule
   ],
   providers: [UserService],

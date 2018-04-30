@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 var database = require('./server/database.js')
 var config = require('./server/config.js')
 var path = require('path')
+var cors = require('cors')
 
 
 var groupRef = database.groups
@@ -11,6 +12,7 @@ var userRef = database.users;
 
 const app = express()
 app.use(bodyParser.json());
+app.use(cors());
 // console.log(__dirname + '/dist')
 app.use(express.static(__dirname + '/dist'));
 
@@ -55,8 +57,6 @@ app.get('/api/get-members/:group', (req, res) =>{
 app.get('/api/get-groups/:key', (req, res) =>{
   console.log(req.params);
   userRef.child(req.params.key).on('value', (snapshot) =>{
-    // res.send(snapshot.val().groups);
-    // req.body.serverMessage = snapshot.val().groups;
     res.end(JSON.stringify(snapshot.val().groups))
   });
 });
@@ -96,9 +96,10 @@ app.post('/api/edit-group', (req, res) => {
   });
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
-});
+//
+// app.get('*', (req, res) => {
+//   res.sendFile(path.join(__dirname, 'dist/index.html'));
+// });
 
 app.listen(config.PORT, () => {
   console.log("listening on port " + config.PORT)
