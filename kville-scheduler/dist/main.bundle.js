@@ -493,7 +493,6 @@ var PickGroupComponent = /** @class */ (function () {
         this.gotGroups = false;
         this.http.get('https://kville-scheduler.herokuapp.com/api/get-groups/' + this.userService.getKey())
             .subscribe(function (post) {
-            console.log(post.json());
             _this.groups = post.json();
             _this.gotGroups = true;
             _this.chRef.detectChanges();

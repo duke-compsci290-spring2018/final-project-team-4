@@ -57,7 +57,12 @@ app.get('/api/get-members/:group', (req, res) =>{
 app.get('/api/get-groups/:key', (req, res) =>{
   console.log(req.params);
   userRef.child(req.params.key).on('value', (snapshot) =>{
-    res.end(JSON.stringify(snapshot.val().groups))
+    if(snapshot.val().groups){
+      res.end(JSON.stringify(snapshot.val().groups))
+    }else{
+      res.end(JSON.stringify({}))
+    }
+
   });
 });
 
