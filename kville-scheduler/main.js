@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 var database = require('./server/database.js')
 var config = require('./server/config.js')
 var path = require('path')
+var cors = require('cors')
 
 
 var groupRef = database.groups
@@ -11,6 +12,7 @@ var userRef = database.users;
 
 const app = express()
 app.use(bodyParser.json());
+app.user(cors());
 // console.log(__dirname + '/dist')
 app.use(express.static(__dirname + '/dist'));
 
@@ -65,7 +67,7 @@ app.post('/api/edit-group', (req, res) => {
   });
   res.end()
 })
-// 
+//
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname, 'dist/index.html'));
 // });
