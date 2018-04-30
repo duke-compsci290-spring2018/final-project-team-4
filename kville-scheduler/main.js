@@ -37,7 +37,7 @@ const TEMPLATE_WUL_DAILY_SCHEDULE_SHEET_ID = 781228253;
 const MASTER_DATA_SHEET_ID = 1200;
 const NIGHTS_SHEET_ID = 1;
 
-var aut = {
+var auth = {
   access_token: "",
   token_type: "",
   expiry_date: ""
