@@ -1,9 +1,0 @@
-<div [ngClass]="{correct: this.answered, wrong: !this.answered && this.tried, unanswered: !this.tried}">
-  <h2>{{question}}</h2>
-  <h3 *ngIf="answered">Correct!!!!</h3>
-  <h3 *ngIf="!answered && tried">Wrong answer please try again</h3>
-  <ul>
-    <li class="option" *ngFor="let o of options"><input type="radio" [name]="question" [(ngModel)]="selected" [disabled]="answered" [value]="o"/>{{o}}</li>
-  </ul>
-  <button (click)="checkAnswer()">Check Answer</button>
-</div>
