@@ -1,7 +1,7 @@
-=== KvilleScheduler ===
+# KvilleScheduler 
 
-Created by Blake Becerra and Addison Howenstine
-Hours spent: 120
+#### Created by Blake Becerra and Addison Howenstine
+#### Hours spent: 120
 
 ### Overview
 
