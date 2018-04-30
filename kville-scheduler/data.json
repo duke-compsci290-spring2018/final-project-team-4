@@ -1,0 +1,222 @@
+{
+  "groups" : {
+    "-LBKRhKuP46g2ApXYu3t" : {
+      "end" : "2018-01-07T12:00",
+      "groupName" : "Blake Walk Up Line",
+      "members" : [ {
+        "first" : "Blake",
+        "last" : "B",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Addison",
+        "last" : "H",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Sarah",
+        "last" : "T",
+        "phone" : "123-456-7890"
+      } ],
+      "spreadsheetId" : "1g43Uu2tYUD1Qs8-BDQE7hR8tLo8ZFeC8Zipip0HlJV8",
+      "start" : "2018-01-05T10:00",
+      "tenting" : {
+        "blackStart" : "2018-01-12T23:00",
+        "blueStart" : "2018-01-26T23:00",
+        "whiteStart" : "2018-02-09T23:00"
+      },
+      "type" : "WUL"
+    },
+    "-LBKRsAJnGOCvxCdSd3d" : {
+      "end" : "2018-02-22T11:00",
+      "groupName" : "Gary Tent Jr.",
+      "members" : [ {
+        "first" : "Addison",
+        "last" : "H",
+        "phone" : "504-920-4520"
+      }, {
+        "first" : "Thomas",
+        "last" : "M",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Grant",
+        "last" : "H",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Emily",
+        "last" : "W",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Joel",
+        "last" : "K",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Noah",
+        "last" : "P",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Charlotte",
+        "last" : "T",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Katie",
+        "last" : "X",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Eric",
+        "last" : "D",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Ryan",
+        "last" : "P",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Reed",
+        "last" : "K",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Ken",
+        "last" : "K",
+        "phone" : "123-456-7890"
+      } ],
+      "spreadsheetId" : "1lr6EL-nWrQicj-9gID7NBwLDXJRLZANVjQMgRWnVV2Q",
+      "start" : "2018-01-12T23:00",
+      "tenting" : {
+        "blackStart" : "2018-01-12T23:00",
+        "blueStart" : "2018-01-26T23:00",
+        "whiteStart" : "2018-02-09T23:00"
+      },
+      "type" : "Tent"
+    },
+    "-LBKSMcj_atDVm1vS9eV" : {
+      "end" : "2018-02-22T10:00",
+      "groupName" : "Blake Tent",
+      "members" : [ {
+        "first" : "Blake",
+        "last" : "B",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Addison",
+        "last" : "H",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Sarah",
+        "last" : "R",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Sarah",
+        "last" : "T",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Larissa",
+        "last" : "C",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Victoria",
+        "last" : "C",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Rachael",
+        "last" : "M",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Yodit",
+        "last" : "G",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Austin",
+        "last" : "G",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Emily",
+        "last" : "W",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Vivian",
+        "last" : "C",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Jessa",
+        "last" : "B",
+        "phone" : "123-456-7890"
+      } ],
+      "spreadsheetId" : "15nPdcdQeFxxfvrAVJIr2zIPvDPbM1hcOoiFPgbyanWo",
+      "start" : "2018-01-12T23:00",
+      "tenting" : {
+        "blackStart" : "2018-01-12T23:00",
+        "blueStart" : "2018-01-26T23:00",
+        "whiteStart" : "2018-02-09T23:00"
+      },
+      "type" : "Tent"
+    },
+    "-LBKSOr9t-iglMJ9HYNd" : {
+      "end" : "2018-01-27T12:00",
+      "groupName" : "UVA WUL",
+      "members" : [ {
+        "first" : "Addison",
+        "last" : "H",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Blake",
+        "last" : "B",
+        "phone" : "123-456-7890"
+      }, {
+        "first" : "Thomas",
+        "last" : "M",
+        "phone" : "123-456-7890"
+      } ],
+      "spreadsheetId" : "1vcTV74zE4G9amITjftrckX8GvKtVHaBmJKNFgg9eWN0",
+      "start" : "2018-01-22T00:00",
+      "tenting" : {
+        "blackStart" : "2018-01-12T23:00",
+        "blueStart" : "2018-01-26T23:00",
+        "whiteStart" : "2018-02-09T23:00"
+      },
+      "type" : "WUL"
+    }
+  },
+  "users" : {
+    "102210989011495232619" : {
+      "email" : "yoditgebretsadik@gmail.com",
+      "name" : "Yodit Gebretsadik"
+    },
+    "105102231981047208858" : {
+      "email" : "xxsarahlee@gmail.com",
+      "name" : "Sarah Turner"
+    },
+    "106453693279293311285" : {
+      "email" : "addisonh@gmail.com",
+      "groups" : {
+        "-LBKRsBOTi3KbX74yVxc" : {
+          "key" : "-LBKRsAJnGOCvxCdSd3d",
+          "name" : "Gary Tent Jr."
+        },
+        "-LBKSOsI8WvkZTF4i-6W" : {
+          "key" : "-LBKSOr9t-iglMJ9HYNd",
+          "name" : "UVA WUL"
+        }
+      },
+      "name" : "Addison Howenstine"
+    },
+    "112260937904170270335" : {
+      "email" : "blake.becerra17@gmail.com",
+      "groups" : {
+        "-LBKRhLxuIqXlJjQI3Nj" : {
+          "key" : "-LBKRhKuP46g2ApXYu3t",
+          "name" : "Blake Walk Up Line"
+        },
+        "-LBKSMdH7BbHCpL7v5AR" : {
+          "key" : "-LBKSMcj_atDVm1vS9eV",
+          "name" : "Blake Tent"
+        }
+      },
+      "name" : "Blake Becerra"
+    },
+    "113797295794210964791" : {
+      "email" : "austingartside@gmail.com",
+      "name" : "Austin Gartside"
+    },
+    "115417518207420803246" : {
+      "email" : "sarahleeturner1996@gmail.com",
+      "name" : "Sarah Turner"
+    }
+  }
+}

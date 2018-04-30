@@ -37,7 +37,11 @@ const TEMPLATE_WUL_DAILY_SCHEDULE_SHEET_ID = 781228253;
 const MASTER_DATA_SHEET_ID = 1200;
 const NIGHTS_SHEET_ID = 1;
 
-
+var aut = {
+  access_token: "",
+  token_type: "",
+  expiry_date: ""
+}
 
 app.post('/api/create-group', (req, res) =>{
   groupRef.push(req.body.data).then((snap) =>{
@@ -123,7 +127,7 @@ app.post('/api/save-user', (req, res) =>{
     }
   });
 
-  var auth = {
+  auth = {
     access_token: req.body.auth.access_token,
     token_type: req.body.auth.token_type,
     expiry_date: req.body.auth.expires_at
@@ -178,7 +182,7 @@ function authorize(credentials, callback, params) {
   // Check if we have previously stored a token.
   fs.readFile(TOKEN_PATH, (err, token) => {
     if (err) return getNewToken(oAuth2Client, callback);
-    oAuth2Client.setCredentials(JSON.parse(token));
+    oAuth2Client.setCredentials(auth);
     return callback(oAuth2Client, params);
   });
 }
