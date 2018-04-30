@@ -28,7 +28,7 @@ export class EditGroupComponent implements OnInit {
 
 
   submit(){
-    this.http.post('/api/edit-group', {group: '-LBEax8hyLCpfa_FHIRA', newMembers: this.newMembers}).
+    this.http.post('/api/edit-group', {group: this.routes.snapshot.params['group'], newMembers: this.newMembers}).
     subscribe((post) =>{
       if(!post.ok) console.log(post);
       this.router.navigate(['pick-group']);

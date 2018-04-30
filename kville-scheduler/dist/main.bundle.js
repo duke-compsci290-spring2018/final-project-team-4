@@ -252,7 +252,7 @@ var EditGroupComponent = /** @class */ (function () {
     };
     EditGroupComponent.prototype.submit = function () {
         var _this = this;
-        this.http.post('/api/edit-group', { group: '-LBEax8hyLCpfa_FHIRA', newMembers: this.newMembers }).
+        this.http.post('/api/edit-group', { group: this.routes.snapshot.params['group'], newMembers: this.newMembers }).
             subscribe(function (post) {
             if (!post.ok)
                 console.log(post);

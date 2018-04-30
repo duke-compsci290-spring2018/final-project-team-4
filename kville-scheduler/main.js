@@ -47,8 +47,8 @@ app.post('/api/create-group', (req, res) =>{
 app.get('/api/get-members/:group', (req, res) =>{
   // console.log(groupRef.child(req.body.group))
   groupRef.child(req.params.group).on('value', (snapshot) =>{
-    res.send(snapshot.val().members);
-    res.end();
+    res.end(JSON.stringify(snapshot.val().members));
+    // res.end();
   });
 });
 
@@ -62,11 +62,39 @@ app.get('/api/get-groups/:key', (req, res) =>{
 });
 
 app.post('/api/edit-group', (req, res) => {
+
   groupRef.child(req.body.group).child('members').set(req.body.newMembers).then((snap) =>{
-    //TODO: add stuff to update sheet
+
+    fs.readFile('client_secret.json', (err, content) => {
+      if (err) return console.log('Error loading client secret file:', err);
+
+
+      let names = [];
+      let numbers = [];
+      for(let i = 0; i < req.body.newMembers.length; i++){
+        names.push(req.body.newMembers[i].first + ' ' + req.body.newMembers[i].last);
+        numbers.push(req.body.newMembers[i].phone);
+      }
+
+      console.log('req.body.group', req.body.group);
+
+      groupRef.child(req.body.group).child('spreadsheetId').once('value', (snapshot)=>{
+        var spreadsheetId = snapshot.val();
+        var params = {
+          'spreadsheetId': spreadsheetId,
+          'names': names,
+          'numbers': numbers,
+        };
+        authorize(JSON.parse(content), updateScheduleNames, params)
+      })
+
+    });
+
+
+
+    res.end();
   });
-  res.end()
-})
+});
 
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'dist/index.html'));
@@ -102,7 +130,6 @@ app.post('/api/save-user', (req, res) =>{
 });
 
 app.post('/api/clone-sheet', (req, res) => {
-  console.log(req.body)
   fs.readFile('client_secret.json', (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Sheets API.
@@ -203,7 +230,10 @@ function createSpreadsheet(auth, params) {
       return;
     }
 
-    params.activeSpreadsheetID = response.data.spreadsheetId; // TODO store this new spreadsheetId to firebase so we have access to it
+    params.activeSpreadsheetID = response.data.spreadsheetId;
+
+    // store spreadsheetId to Firebase
+    groupRef.child(params.groupId).child('spreadsheetId').set(response.data.spreadsheetId);
 
     fs.readFile('client_secret.json', (err, content) => {
       if (err) return console.log('Error loading client secret file:', err);
@@ -1006,5 +1036,53 @@ function batchUpdatesForNewWULSpreadsheet(auth, params) {
       return;
     }
   });
+}
 
+function updateScheduleNames(auth, params) {
+
+  console.log('ok cool', params.spreadsheetId);
+
+  var batchRequest = [];
+  var nameCols = [];
+
+  for (var i = 0; i < params.names.length; i++) {
+    nameCols.push({
+      "values": [
+        {"userEnteredValue": {"stringValue": params.names[i]}},
+        {"userEnteredValue": {"stringValue": params.numbers[i]}},
+      ]
+    });
+  }
+
+  batchRequest.push({
+    "updateCells": {
+      "start": {
+        "sheetId": MASTER_DATA_SHEET_ID,
+        "rowIndex": 1,
+        "columnIndex": 0,
+      },
+      "rows": nameCols,
+      "fields": "userEnteredValue"
+    }
+  });
+
+
+
+  var request = {
+    spreadsheetId: params.spreadsheetId,
+
+    resource: {
+      requests: batchRequest,
+    },
+
+    auth: auth,
+  };
+
+  const sheets = google.sheets({version: 'v4', auth});
+  sheets.spreadsheets.batchUpdate(request, function(err, response) {
+    if (err) {
+      console.error(err);
+      return;
+    }
+  });
 }
