@@ -85,8 +85,9 @@ var AppComponent = /** @class */ (function () {
                 console.log(post);
         });
     };
-    AppComponent.prototype.handleSignOutClick = function (event) {
+    AppComponent.prototype.handleSignOutClick = function () {
         gapi.auth2.getAuthInstance().signOut();
+        this.router.navigate(['welcome']);
     };
     AppComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["Component"])({
