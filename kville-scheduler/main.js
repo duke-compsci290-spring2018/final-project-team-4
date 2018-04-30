@@ -13,6 +13,7 @@ var userRef = database.users;
 const app = express()
 app.use(bodyParser.json());
 app.user(cors());
+app.options('*', cors());
 // console.log(__dirname + '/dist')
 app.use(express.static(__dirname + '/dist'));
 
