@@ -16,6 +16,7 @@ export class PickGroupComponent implements OnInit {
   constructor(private userService: UserService, private http: Http, private router:Router, private chRef: ChangeDetectorRef) {
     this.http.get('/api/get-groups/'+this.userService.getKey())
     .subscribe((post)=>{
+      console.log(post.json())
       this.groups = post.json();
       this.gotGroups = true;
       this.chRef.detectChanges()

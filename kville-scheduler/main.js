@@ -48,13 +48,16 @@ app.get('/api/get-members/:group', (req, res) =>{
   // console.log(groupRef.child(req.body.group))
   groupRef.child(req.params.group).on('value', (snapshot) =>{
     res.send(snapshot.val().members);
+    res.end();
   });
 });
 
 app.get('/api/get-groups/:key', (req, res) =>{
   console.log(req.params);
   userRef.child(req.params.key).on('value', (snapshot) =>{
-    res.send(snapshot.val().groups)
+    // res.send(snapshot.val().groups);
+    // req.body.serverMessage = snapshot.val().groups;
+    res.end(JSON.stringify(snapshot.val().groups))
   });
 });
 
@@ -125,7 +128,7 @@ app.post('/api/clone-sheet', (req, res) => {
     };
     authorize(JSON.parse(content), createSpreadsheet, params)
   });
-  res.send("working");
+  res.end("working");
 });
 
 

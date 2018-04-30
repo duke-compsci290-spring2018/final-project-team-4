@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Http } from '@angular/http';
 import { UserService } from '../user.service';
 import { Router, ActivatedRoute } from '@angular/router'
@@ -13,12 +13,13 @@ export class EditGroupComponent implements OnInit {
   members = [];
   newMembers = []
 
-  constructor(private http: Http, private userService: UserService, private router: Router, private routes: ActivatedRoute) {
+  constructor(private http: Http, private userService: UserService, private router: Router, private routes: ActivatedRoute, private chRef: ChangeDetectorRef) {
     this.http.get('/api/get-members/' + this.routes.snapshot.params['group'])
     .subscribe((post)=>{
       if(!post.ok) console.log(post);
       this.members = post.json();
       this.newMembers = post.json();
+      this.chRef.detectChanges()
     });
   }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Http } from '@angular/http';
 import { UserService } from '../user.service';
 import { Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class MakeGroupComponent implements OnInit {
 
-  constructor(private http: Http, private userService: UserService, private router: Router) { }
+  constructor(private http: Http, private userService: UserService, private router: Router, private chRef: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -40,6 +40,7 @@ export class MakeGroupComponent implements OnInit {
         phone: '123-456-7890'
       });
     }
+    this.chRef.detectChanges()
   }
 
   removeMember(){
@@ -49,6 +50,7 @@ export class MakeGroupComponent implements OnInit {
     if(this.data.members.length === 0){
       this.addMember();
     }
+    this.chRef.detectChanges()
   }
 
   tent(){
