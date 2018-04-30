@@ -42,7 +42,7 @@ export class AppComponent {
   }
 
   handleSignOutClick(event):void {
-    gapi.auth2.getAuthInstance().signOut()
     this.router.navigate(['welcome']);
+    gapi.auth2.getAuthInstance().signOut()
   }
 }
