@@ -1,3 +1,13 @@
-<p>
-  pick-group works!
-</p>
+<div class="container" *ngIf="gotGroups">
+  <a (click)="toMakeGroup()">Make a Group</a>
+  <table>
+    <tr>
+      <th>Group Name</th>
+      <th></th>
+    </tr>
+    <tr *ngFor="let g of groups | values">
+      <td>{{g.name}}</td>
+      <td><a [routerLink]="['/edit-group', g.key]" routerLinkActive="active">Edit Group Members</a></td>
+    </tr>
+  </table>
+</div>

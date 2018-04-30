@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
-import { UserService } from '../user.service'
+import { UserService } from '../user.service';
+import { Router, ActivatedRoute } from '@angular/router'
 
 @Component({
   selector: 'app-edit-group',
@@ -12,10 +13,10 @@ export class EditGroupComponent implements OnInit {
   members = [];
   newMembers = []
 
-  constructor(private http: Http, private userService: UserService) {
-    this.http.get('/api/get-members/-LBI7JG3W57TOwMhzT-f')
+  constructor(private http: Http, private userService: UserService, private router: Router, private routes: ActivatedRoute) {
+    this.http.get('/api/get-members/' + this.routes.snapshot.params['group'])
     .subscribe((post)=>{
-      console.log(post)
+      if(!post.ok) console.log(post);
       this.members = post.json();
       this.newMembers = post.json();
     });
@@ -28,7 +29,8 @@ export class EditGroupComponent implements OnInit {
   submit(){
     this.http.post('/api/edit-group', {group: '-LBEax8hyLCpfa_FHIRA', newMembers: this.newMembers}).
     subscribe((post) =>{
-      console.log(post)
+      if(!post.ok) console.log(post);
+      this.router.navigate(['pick-group']);
     });
   }
 

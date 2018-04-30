@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { UserService } from '../user.service';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -26,10 +26,9 @@ export class MakeGroupComponent implements OnInit {
   }
 
   tenting = {
-    blackStart: "",
-    blueStart: "",
-    whiteStart: "",
-    tentingEnd: ""
+    blackStart: "2018-01-12T23:00",
+    blueStart: "2018-01-26T23:00",
+    whiteStart: "2018-02-09T23:00",
   }
 
 
@@ -66,7 +65,6 @@ export class MakeGroupComponent implements OnInit {
 
   submit(){
     if(this.data.start > this.data.end){
-      console.log('invalid');
       alert("Start date must be before the end date. Please validate your input");
       return;
     }
@@ -79,10 +77,8 @@ export class MakeGroupComponent implements OnInit {
     this.http.post('/api/create-group', info)
     .subscribe((post)=>{
       if(!post.ok) console.log(post);
-      console.log(post.text())
       this.http.post('/api/clone-sheet', {info: info, groupID: post.text()}).subscribe((post)=>{
-        console.log('yes please')
-        this.router.navigate(['']);
+        this.router.navigate(['pick-group']);
       })
     });
   }

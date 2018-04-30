@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Http } from '@angular/http';
-import { UserService } from '../user.service'
+import { UserService } from '../user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pick-group',
@@ -9,17 +10,23 @@ import { UserService } from '../user.service'
 })
 export class PickGroupComponent implements OnInit {
 
-  groups
+  groups;
+  gotGroups = false;
 
-  constructor(private userService: UserService, private http: Http) {
+  constructor(private userService: UserService, private http: Http, private router:Router, private chRef: ChangeDetectorRef) {
+    this.http.get('/api/get-groups/'+this.userService.getKey())
+    .subscribe((post)=>{
+      this.groups = post.json();
+      this.gotGroups = true;
+      this.chRef.detectChanges()
+    });
   }
 
   ngOnInit() {
-    console.log('getting groups yo')
-    this.http.get('/api/get-groups/'+this.userService.getKey())
-    .subscribe((post)=>{
-      console.log(post)
-    });
+  }
+
+  toMakeGroup(){
+    this.router.navigate(['make-group'])
   }
 
 }

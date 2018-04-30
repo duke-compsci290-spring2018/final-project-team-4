@@ -19,11 +19,15 @@ import { UserService } from './user.service';
 import { EditGroupComponent } from './edit-group/edit-group.component';
 import { PickGroupComponent } from './pick-group/pick-group.component';
 
+import { NgPipesModule } from 'ngx-pipes';
+
 
 const routes: Routes = [
   {path: 'make-group', component: MakeGroupComponent},
-  {path: 'edit-group', component: EditGroupComponent},
+  {path: 'edit-group/:group', component: EditGroupComponent},
   {path: 'pick-group', component: PickGroupComponent},
+  {path: 'welcome', component: WelcomePageComponent},
+  { path: '',   redirectTo: '/welcome', pathMatch: 'full' }
 ]
 
 @NgModule({
@@ -43,7 +47,8 @@ const routes: Routes = [
     AngularFireAuthModule,
     HttpModule,
     FormsModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
+    NgPipesModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]

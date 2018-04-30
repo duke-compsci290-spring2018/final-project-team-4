@@ -19,39 +19,32 @@
     </div>
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label for="startDate">Group Start Date:{{data.start}}</label>
+        <label for="startDate">Group Start Date:</label>
         <input type="datetime-local" id="startDate" class="form-control" name="start" [(ngModel)]="data.start" required />
       </div>
       <div class="form-group col-md-6">
-        <label for="endDate">Group End Date:{{data.end}}</label>
+        <label for="endDate">Group End Date:</label>
         <input type="datetime-local" id="endDate" class="form-control" name="end" [(ngModel)]="data.end" required />
       </div>
     </div>
   </fieldset>
   <fieldset *ngIf="data.type==='Tent'">
     <div class="form-row">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-4">
         <label for="black">Black Tenting Start Date:</label>
-        <input type="date" id="black" class="form-control" name="black" [(ngModel)]="tenting.blackStart" requied />
+        <input type="datetime-local" id="black" class="form-control" name="black" [(ngModel)]="tenting.blackStart" requied />
       </div>
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-4">
         <label for="blue">Blue Tenting Start Date:</label>
-        <input type="date" id="blue" class="form-control" name="blue" [(ngModel)]="tenting.blueStart" requied />
+        <input type="datetime-local" id="blue" class="form-control" name="blue" [(ngModel)]="tenting.blueStart" requied />
       </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-6">
+      <div class="form-group col-md-4">
         <label for="white">White Tenting Start Date:</label>
-        <input type="date" id="white" class="form-control" name="white" [(ngModel)]="tenting.whiteStart" requied />
-      </div>
-      <div class="form-group col-md-6">
-        <label for="tentingEnd">Tenting End Date:</label>
-        <input type="date" id="tentingEnd" class="form-control" name="tentingEnd" [(ngModel)]="tenting.tentingEnd" requied />
+        <input type="datetime-local" id="white" class="form-control" name="white" [(ngModel)]="tenting.whiteStart" requied />
       </div>
     </div>
   </fieldset>
   <fieldset>
-    {{data.members}}
     <div *ngFor="let u of data.members; let i=index">
       <div class="form-row">
         <div class="form-group col-md-4">
