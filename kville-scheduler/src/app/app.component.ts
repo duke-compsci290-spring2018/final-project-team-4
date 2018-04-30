@@ -35,7 +35,7 @@ export class AppComponent {
 
   test(){
     let body = {auth: this.user.getAuthResponse()}
-    this.http.post('api/clone-sheet', body).
+    this.http.post('https://kville-scheduler.herokuapp.com/api/clone-sheet', body).
     subscribe((post) =>{
       if(!post.ok) console.log(post);
     });
